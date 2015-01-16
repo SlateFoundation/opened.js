@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Testapp</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+	<script src="oauth.js"></script>
+	<button id="clickme">login</button>
+	<script>
+	  document.getElementById('clickme').onclick = function(){
+		window.OpenEd.api.init({
+		  client_id: '7e922c66bf453f1ab30646cc154c4e58d96ae770e828ce3d208b5f1a94ceb53e',
+		  redirect_uri: 'http://oauth2.openedtest.com:4200'
+	    });
+	    window.OpenEd.api.login(function () {
+		  window.OpenEd.api.request('/current_user.json', null, function () {
+		    console.log(arguments);
+		  });
+		});
+	  }
+    </script>
+  </body>
+</html>
