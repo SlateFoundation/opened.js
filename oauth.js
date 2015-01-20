@@ -10,9 +10,9 @@
 
     isInited: false,
 
-    apiHost: 'https://openedengine-sandbox1.herokuapp.com',
+    apiHost: 'https://api.opened.io',
 
-    openedHost: 'http://local.opened.io:9000',
+    openedHost: 'http://opened.io',
     
     init: function (options) {
       if (!options || !options.client_id) {
