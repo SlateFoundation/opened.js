@@ -1,12 +1,26 @@
 # opened-oauth.js
 ## Getting started
-1. Create a callback route on your website (you can see an exmaple at callback.html)
-2. Get application key(redirect_uri must be an url that you created in step 1)
-3. Download and include opened-oauth.js to your web-site
-4. ``` window.OpenEd.api.init({client_id: 'your app id here', redirect_uri: 'your application success callback uri'}) ```
-5. ``` window.OpenEd.api.login() ``` will open a popup with OpenEd oauth flow
-6. After success u have your token avaivable via ``` window.OpenEd.api.getToken() ```
-7. Now u can access OpenEd API endpoints  via ``` window.OpenEd.api.request() ```
+- Create a callback route on your website (you can see an exmaple at callback.html)
+```
+<script>
+	var hash = document.location.hash;
+	if (hash) {
+	    window.opener.OpenEd.api._setToken(hash);
+	}
+	window.close();
+</script>
+```
+- Get application key at http://developers.opened.io/ (redirect_uri must be an url that you created in step 1)
+- Download and include opened-oauth.js to your web-site
+- Init your app
+``` 
+window.OpenEd.api.init(
+    {client_id: 'your app id here', redirect_uri: 'your application success callback uri'}
+) 
+```
+- Run ``` window.OpenEd.api.login() ```. It will open a popup with OpenEd oauth flow
+- After success you have your token avaivable via ``` window.OpenEd.api.getToken() ```
+- Now you can access OpenEd API endpoints  via ``` window.OpenEd.api.request() ```
 
 ## Methods
 ### init(initOptions)
@@ -16,10 +30,15 @@ window.OpenEd.api.init(initOptions)
 initOptions:
  - client_id - String, required
 
- Your client app id. Exmaple: 'fj34892fj20984ujgf3029guj89324ujgt09u4g'
+ Your client app id. 
+ 
+ Exmaple: 'fj34892fj20984ujgf3029guj89324ujgt09u4g'
+
  - redirect_uri - String, required
 
- Your apps callback url. Exmaple: 'https://exmaple.com/oauth-callback/'
+ Your apps callback url. 
+ 
+ Exmaple: 'https://exmaple.com/oauth-callback/'
 
 ### login(callback)
 ```
@@ -47,7 +66,7 @@ responseData - result data object
 
 ## API endpoints
 
-### /current_user.json 
+### /users/me.json 
 
 Returns current user object
 
@@ -55,11 +74,11 @@ Exmaple:
 
 request:
 ```
-window.OpenEd.api.request('/current_user.json', null, callback)
+window.OpenEd.api.request('/users/me.json', null, callback)
 ```
 response:
-```
-{
+```json
+{   
     "current_user":{
         "first_name":"Andrew",
         "last_name":"Saenkov",
@@ -83,17 +102,14 @@ request:
 window.OpenEd.api.request('/resources.json', {
     offset: 10,
     limit: 10,
-    descriptive: 'keyword search',
-    grade: 'k',
-    resource_type: 'game',
-    contribution_name: 'Pearson'
+    descriptive: 'keyword search'
 }, callback)
 ```
 response:
-```
-{"meta":
-    {"pagination":
-        {
+```json
+{
+    "meta":{
+        "pagination":{
             "offset":10,
             "total_entries":894208,
             "entries":10,
@@ -111,4 +127,15 @@ response:
         {"standard_idents":["4.MD.2"],"grade_idents":["4"],"grades_range":"4","course_id":null,"grade_group_ids":[46],"featured":false,"embeddable":false,"area_ids":[1],"area_titles":["Mathematics"],"subject_ids":[6,63],"subject_titles":["Measurement \u0026 Data","Mathematics"],"resource_type":"question","id":1071646,"state":"public","thumb":"https://s3.amazonaws.com/opened/resource_types/images/question_freeresponse.png","thumbnails":{"mini":"https://s3.amazonaws.com/opened/resource_types/images/question_freeresponse.png","small":"https://s3.amazonaws.com/opened/resource_types/images/question_freeresponse.png","medium":"https://s3.amazonaws.com/opened/resource_types/images/question_freeresponse.png","large":"https://s3.amazonaws.com/opened/resource_types/images/question_freeresponse.png"},"contribution_name":"Janet Woodthorpe","publisher":"Janet Woodthorpe","owner_id":8611,"share_url":"https://www.opened.io/resources/1071646","rating":5,"is_allowed":true,"is_locked":true,"title":"A 5 gallon bottle of mountain spring water costs...","description":"A 5 gallon bottle of mountain spring water costs $6.50. A package including 4 single-quart packets of mountain spring water costs $1.80. If someone needs to buy 5 gallons of mountain spring water, how much money do they save by buying the 5 gallon bottle rather than packets of quarts? ","is_premium":null,"duration":null,"my_rating":null,"safe_url":"https://www.opened.io/resources/1071646"},
      ]
 }
+```
+
+## Async loading
+
+```
+<script>
+    window.OpenEd.api.oninit = function () {
+        //OpenEd is loaded and ready to use
+    }
+</script>
+<script src="oauth.js" async="true"></script>
 ```
