@@ -10,7 +10,7 @@
 
     isInited: false,
 
-    apiHost: 'https://openedengine-sandbox1.herokuapp.com',
+    apiHost: 'https://api-staging.opened.io',
 
     openedHost: 'http://local.opened.io:9000',
     
@@ -32,7 +32,7 @@
     },
 
     runOnInit: function () {
-      root.OpenEd.oninit && root.OpenEd.oninit()
+      root.OpenEd.oninit && root.OpenEd.oninit();
     },
 
     login: function (callback) {
@@ -50,7 +50,21 @@
     },
 
     logout: function (callback) {
-      this.saveToken(null);  
+      var self = this;
+      this.xhr({
+        url: self.apiHost + '/oauth/revoke',
+        type: 'POST',
+        data: {
+          token: self.getToken()
+        },
+        headers: {
+          Authorization: 'Bearer ' + self.getToken()
+        },
+        success: function () {
+          self.saveToken({access_token: null, expires_in: null, token_type: null});
+          callback();
+        }
+      });
     },
 
     saveToken: function (tokenData) {
@@ -94,7 +108,12 @@
         });
     },
 
-    prepareReqData: function (data) {
+    prepareReqData: function (obj) {
+      var data = new FormData();
+      for(var p in obj)
+        if (obj.hasOwnProperty(p)) {
+          data.append(p, obj[p]);
+        }
       return data;
     },
     /*
