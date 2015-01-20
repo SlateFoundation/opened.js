@@ -10,7 +10,7 @@
 	window.close();
 </script>
 ```
-- Get application key at http://developers.opened.io/ (redirect_uri must be an url that you created in step 1)
+- Get application key by sending a request to api@opened.io with a redirect_uri - url that you created in step 1 (more info http://developers.opened.io/)
 - Download and include opened-oauth.js to your web-site
 - Init your app
 ``` 
