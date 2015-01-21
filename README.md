@@ -1,4 +1,7 @@
 # opened-oauth.js
+
+This JavaScript library lets you integrate with the OpenEd resource library from your web application pages.  
+
 ## Getting started
 - Create a callback route on your website (you can see an example at callback.html)
 ```
