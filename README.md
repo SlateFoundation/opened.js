@@ -1,6 +1,6 @@
 # opened-oauth.js
 ## Getting started
-- Create a callback route on your website (you can see an exmaple at callback.html)
+- Create a callback route on your website (you can see an example at callback.html)
 ```
 <script>
 	var hash = document.location.hash;
@@ -21,36 +21,36 @@ window.OpenEd.api.init(
 - Run ``` window.OpenEd.api.login() ```. It will open a popup with OpenEd oauth flow
 - After success you have your token avaivable via ``` window.OpenEd.api.getToken() ```
 - Now you can access OpenEd API endpoints  via ``` window.OpenEd.api.request() ```
-
+ 
 ## Methods
 ### init(initOptions)
 #### Parameters:
 **initOptions:**
  - **client_id** - String, required
-
+ 
  Your client app id. 
  
- Exmaple: 'fj34892fj20984ujgf3029guj89324ujgt09u4g'
-
+ Example: 'fj34892fj20984ujgf3029guj89324ujgt09u4g'
+ 
  - **redirect_uri** - String, required
-
+ 
  Your apps callback url. 
  
  Exmaple: 'https://exmaple.com/oauth-callback/'
-
+ 
 #### Example
 ```
 window.OpenEd.api.init(initOptions)
 ```
-
+ 
 ### login(callback)
-
+ 
 #### Parameters:
-
+ 
 **callback(error)** - function
-
+ 
 A callback function that fires on error/success
-
+ 
 argument *error* is empty if success
 #### Example
 ```
@@ -60,9 +60,9 @@ window.OpenEd.api.login(callback)
 #### Parameters:
 **callback(error)** - function
 A callback function that fires on error/success
-
+ 
 argument *error* is empty if success
-#### Exmaple
+#### Example
 ```
 window.OpenEd.api.logout(callback)
 ```
@@ -74,18 +74,19 @@ API end point
 query data object
 **callback(responseData)** - function
 argument *responseData* - result data object
-#### Exmaple
+#### Example
 ```
 window.OpenEd.api.request(apiName, data, callback)
 ```
 ## API endpoints
-
+Full Api documentation can be found here http://docs.opened.apiary.io/
+ 
 ### /users/me.json 
-
+ 
 Returns current user object
-
-#### Exmaple: 
-
+ 
+#### Example: 
+ 
 ##### request:
 ```
 window.OpenEd.api.request('/users/me.json', null, callback)
@@ -100,14 +101,14 @@ window.OpenEd.api.request('/users/me.json', null, callback)
     "email":"andrew@example.com"
 }
 ```
-
+ 
 ### /resources.json 
-
+ 
 Makes a resource query. 
-
+ 
 Returns an array of resources and pagination info
-
-#### Parametrs
+ 
+#### Parameters
 - **descriptive** (string, optional, example: 3D) - Filters title, description, area_title and subject_title with Solr fulltext search
 - **limit** (number, optional, example: 1) - Maximum number of results to return (1..100, 50 by default).
 - **offset** (number, optional, example: 0) - 0 by default.
@@ -120,9 +121,9 @@ Returns an array of resources and pagination info
 - **grade_group** (string, optional, example: Elementary) - restricts to specified grade_group (e.g. "Elementary", "Middle School", "High School")
 - **contribution_name** (string, optional) - the name of the contribution (e.g. "BrightStorm", "KhanAcademy")
 - **resource_types** (string, optional ) - array of resource types which can be "video", "game", "assessment", "question"
-
+ 
 #### Example:
-
+ 
 ##### request:
 ```
 window.OpenEd.api.request('/resources.json', {
@@ -154,9 +155,9 @@ window.OpenEd.api.request('/resources.json', {
      ]
 }
 ```
-
+ 
 ## Async loading
-
+ 
 ```
 <script>
     window.OpenEd.api.oninit = function () {
@@ -165,3 +166,18 @@ window.OpenEd.api.request('/resources.json', {
 </script>
 <script src="oauth.js" async="true"></script>
 ```
+ 
+## OpenEd Implict Flow
+ 
+1. User goes to your app
+2. User sends an action to login with OpenEd Provider
+3. Your app opens popup window with opened
+3. After successful signin you will be redirect to your app with access token
+4. Send a request to verify token
+5. You can access OpenEd API with the received token
+ 
+![OAuth Implict Flow](https://d82yecxzdbhgs.cloudfront.net/dev_artefacts/images/tokenflow.png)
+ 
+## Security issues
+ 
+Please read this http://technotes.iangreenleaf.com/posts/closing-a-nasty-security-hole-in-oauth.html
