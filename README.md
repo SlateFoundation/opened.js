@@ -107,6 +107,8 @@ window.OpenEd.api.request('/users/me.json', null, callback)
 Makes a resource query. 
  
 Returns an array of resources and pagination info
+
+for more details visit http://docs.opened.apiary.io/
  
 #### Parameters
 - **descriptive** (string, optional, example: 3D) - Filters title, description, area_title and subject_title with Solr fulltext search
@@ -173,7 +175,7 @@ window.OpenEd.api.request('/resources.json', {
 2. User sends an action to login with OpenEd Provider
 3. Your app opens popup window with opened
 3. After successful signin you will be redirect to your app with access token
-4. Send a request to verify token
+4. Send a request to validate token (please, read Security issues)
 5. You can access OpenEd API with the received token
  
 ![OAuth Implict Flow](https://d82yecxzdbhgs.cloudfront.net/dev_artefacts/images/tokenflow.png)
