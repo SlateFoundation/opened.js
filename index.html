@@ -74,7 +74,7 @@
 		  redirect_uri: 'http://oauth2.openedtest.com:4200/callback.html'
 	    });
 	    window.OpenEd.api.login(function () {
-		  window.OpenEd.api.request('/current_user.json', null, function (data) {
+		  window.OpenEd.api.request('/users/me.json', null, function (data) {
             console.log(data);
             $('.user-cont').html('email:' + data.current_user.email);
 			$('#login').hide();
