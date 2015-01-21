@@ -24,59 +24,73 @@ window.OpenEd.api.init(
 
 ## Methods
 ### init(initOptions)
-```
-window.OpenEd.api.init(initOptions)
-```
-initOptions:
- - client_id - String, required
+#### Parameters:
+**initOptions:**
+ - **client_id** - String, required
 
  Your client app id. 
  
  Exmaple: 'fj34892fj20984ujgf3029guj89324ujgt09u4g'
 
- - redirect_uri - String, required
+ - **redirect_uri** - String, required
 
  Your apps callback url. 
  
  Exmaple: 'https://exmaple.com/oauth-callback/'
 
+#### Example
+```
+window.OpenEd.api.init(initOptions)
+```
+
 ### login(callback)
+
+#### Parameters:
+
+**callback(error)** - function
+
+A callback function that fires on error/success
+
+argument *error* is empty if success
+#### Example
 ```
 window.OpenEd.api.login(callback)
 ```
-callback(error) - function
-
-error is empty if success
-
 ### logout(callback)
+#### Parameters:
+**callback(error)** - function
+A callback function that fires on error/success
+
+argument *error* is empty if success
+#### Exmaple
 ```
 window.OpenEd.api.logout(callback)
 ```
-callback(error) - function
-
-error is empty if success
-
 ### request(apiName, data, callback)
+#### Parameters:
+**apiName** - string
+API end point
+**data** - object
+query data object
+**callback(responseData)** - function
+argument *responseData* - result data object
+#### Exmaple
 ```
 window.OpenEd.api.request(apiName, data, callback)
 ```
-callback(responseData) - function
-
-responseData - result data object
-
 ## API endpoints
 
 ### /users/me.json 
 
 Returns current user object
 
-Exmaple: 
+#### Exmaple: 
 
-request:
+##### request:
 ```
 window.OpenEd.api.request('/users/me.json', null, callback)
 ```
-response:
+##### response:
 ```json
 {   
     "current_user":{
@@ -95,9 +109,23 @@ Makes a resource query.
 
 Returns an array of resources and pagination info
 
-Example:
+#### Parametrs
+- **descriptive** (string, optional, example: 3D) - Filters title, description, area_title and subject_title with Solr fulltext search
+- **limit** (number, optional, example: 1) - Maximum number of results to return (1..100, 50 by default).
+- **offset** (number, optional, example: 0) - 0 by default.
+- **standard_group** (number, optional, example: 4) - looks for resources aligned with specified standards in the standard_group by standard_groups ID
+- **category** (string, optional, example: Geometry%20%28Elementary%29) - looks for resources aligned with specified standards are in the category by category.id or category.title
+- **standard** (string, optional, example: K.G.2) - looks for resources aligned with specified standard by standard.id (the internal object ID) or standard.identifier (the Common Core ID)
+- **area** (string, optional, example: Math) - looks for resources assigned with specified area (and/or with specified subjects of area) by area.id or area.title
+- **subject** (string, optional, example: Geometry) - looks for resources assigned with specified subject by subject.id or subject.title
+- **grade** (string, optional, example: K) - restricts to specified grades (expressed as K,1, .. 12)
+- **grade_group** (string, optional, example: Elementary) - restricts to specified grade_group (e.g. "Elementary", "Middle School", "High School")
+- **contribution_name** (string, optional) - the name of the contribution (e.g. "BrightStorm", "KhanAcademy")
+- **resource_types** (string, optional ) - array of resource types which can be "video", "game", "assessment", "question"
 
-request:
+#### Example:
+
+##### request:
 ```
 window.OpenEd.api.request('/resources.json', {
     offset: 10,
@@ -105,7 +133,7 @@ window.OpenEd.api.request('/resources.json', {
     descriptive: 'keyword search'
 }, callback)
 ```
-response:
+##### response:
 ```json
 {
     "meta":{
