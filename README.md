@@ -50,7 +50,7 @@ window.OpenEd.api.init(initOptions)
 ```
  
 ### login(callback)
-Runs OpenEd oath flow. Opens a popup with OpenEd siginin flow and redirects on success(sets the token)
+Runs OpenEd OAuth flow. Opens a popup with OpenEd siginin flow and redirects on success(sets the token)
 #### Parameters:
  
 **callback(error)** - function
@@ -63,6 +63,7 @@ argument *error* is empty if success
 window.OpenEd.api.login(callback)
 ```
 ### logout(callback)
+Revokes current user token. Makes API unaccessiable by current token.
 #### Parameters:
 **callback(error)** - function
 A callback function that fires on error/success
@@ -71,7 +72,6 @@ argument *error* is empty if success
 #### Example
 ```
 window.OpenEd.api.logout(callback)
-Revokes current user token. Makes API unaccessiable by current token.
 ```
 ### request(apiName, data, callback)
 Make a request to OpenEd API. More info http://docs.opened.apiary.io/
