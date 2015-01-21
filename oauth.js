@@ -10,9 +10,9 @@
 
     isInited: false,
 
-    apiHost: 'https://openedengine-sandbox1.herokuapp.com',
+    apiHost: 'https://api.opened.io',
 
-    openedHost: 'http://local.opened.io:9000',
+    openedHost: 'http://opened.io',
     
     init: function (options) {
       if (!options || !options.client_id) {
@@ -57,7 +57,6 @@
       for (var name in tokenData) {
           localStorage.setItem(this.tokenPrefix + '.' + name, tokenData[name]);
       }
-      
     },
 
     getToken: function () {
@@ -71,15 +70,30 @@
           options.success(JSON.parse(xmlhttp.responseText));
         }
       }
-
-      xmlhttp.open(options.type || 'GET', options.url, true);
+      var type = options.type || 'GET';
+      var url = options.url;
+      if (type === 'GET') {
+        var urlData = '?';
+        var params = [];
+        for (var a in options.data) {
+          params.push(a + '=' + options.data[a]);
+        }
+        if (params.length) {
+          url += '?' + (params.join('&'));
+        }
+      }
+      xmlhttp.open(type, url, true);
       if (options.headers) {
         for (var name in options.headers) {
           xmlhttp.setRequestHeader(name, options.headers[name]);
         }
         
       }
-      xmlhttp.send(this.prepareReqData(options.data));
+      if (type !== 'GET') {
+        xmlhttp.send(this.prepareReqData(options.data));
+      } else {
+        xmlhttp.send();
+      }
     },
 
     request: function (api, data, callback) {
