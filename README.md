@@ -92,14 +92,12 @@ window.OpenEd.api.request('/users/me.json', null, callback)
 ```
 ##### response:
 ```json
-{   
-    "current_user":{
-        "first_name":"Andrew",
-        "last_name":"Saenkov",
-        "full_name":"Andrew Saenkov",
-        "username":"andrew",
-        "email":"andrew@example.com"
-     }
+{
+    "first_name":"Andrew",
+    "last_name":"Saenkov",
+    "full_name":"Andrew Saenkov",
+    "username":"andrew",
+    "email":"andrew@example.com"
 }
 ```
 
