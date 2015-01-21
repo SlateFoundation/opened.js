@@ -12,7 +12,7 @@
 
     apiHost: 'https://api.opened.io',
 
-    openedHost: 'http://opened.io',
+    openedHost: 'https://opened.io',
     
     init: function (options) {
       if (!options || !options.client_id) {
