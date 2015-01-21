@@ -75,7 +75,6 @@
 	    });
 	    window.OpenEd.api.login(function () {
 		  window.OpenEd.api.request('/users/me.json', null, function (data) {
-            console.log(data);
             $('.user-cont').html('email:' + data.email);
 			$('#login').hide();
             $('.loggedin-cont').show();
