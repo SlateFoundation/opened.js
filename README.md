@@ -27,6 +27,9 @@ window.OpenEd.api.init(
  
 ## Methods
 ### init(initOptions)
+Inits OpenEd API. You should pass your clien id and redirect_uri.
+
+This method is required for ferther work with OpenEd API.
 #### Parameters:
 **initOptions:**
  - **client_id** - String, required
@@ -47,7 +50,7 @@ window.OpenEd.api.init(initOptions)
 ```
  
 ### login(callback)
- 
+Runs OpenEd OAuth flow. Opens a popup with OpenEd siginin flow and redirects on success(sets the token)
 #### Parameters:
  
 **callback(error)** - function
@@ -60,6 +63,7 @@ argument *error* is empty if success
 window.OpenEd.api.login(callback)
 ```
 ### logout(callback)
+Revokes current user OAuth access_token. Makes API unaccessiable by current user OAuth access_token.
 #### Parameters:
 **callback(error)** - function
 A callback function that fires on error/success
@@ -70,6 +74,7 @@ argument *error* is empty if success
 window.OpenEd.api.logout(callback)
 ```
 ### request(apiName, data, callback)
+Make a request to OpenEd API with OAuth access_token. More info http://docs.opened.apiary.io/
 #### Parameters:
 **apiName** - string
 API end point
