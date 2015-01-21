@@ -63,7 +63,7 @@ argument *error* is empty if success
 window.OpenEd.api.login(callback)
 ```
 ### logout(callback)
-Revokes current user token. Makes API unaccessiable by current token.
+Revokes current user OAuth access_token. Makes API unaccessiable by current user OAuth access_token.
 #### Parameters:
 **callback(error)** - function
 A callback function that fires on error/success
@@ -74,7 +74,7 @@ argument *error* is empty if success
 window.OpenEd.api.logout(callback)
 ```
 ### request(apiName, data, callback)
-Make a request to OpenEd API. More info http://docs.opened.apiary.io/
+Make a request to OpenEd API with OAuth access_token. More info http://docs.opened.apiary.io/
 #### Parameters:
 **apiName** - string
 API end point
