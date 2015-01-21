@@ -35,6 +35,26 @@
                   </div>
                 </div>
                 <input type="text" id="descriptive" name="descriptive" placeholder="search keyword">
+                <br/>
+                <input type="text" id="standard" name="standard" placeholder="standard search">
+                <br/>
+                <select id="grade" name="grade">
+                  <option selected value="">any</option>
+                  <option>K</option>
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                  <option>6</option>
+                  <option>7</option>
+                  <option>8</option>
+                  <option>9</option>
+                  <option>10</option>
+                  <option>11</option>
+                  <option>12</option>
+                </select>
+                <br/>
                 <button id="search" class="btn btn-default">search</button>
                 <br/><br/>
                 <div id="resource-cont">
@@ -69,7 +89,20 @@
 		});
       });
       $('#search').click(function(){
-        window.OpenEd.api.request('/resources.json', {descriptive: $('#descriptive').val()}, function (data) {
+        var data = {};
+        var descriptive = $('#descriptive').val();
+        if (descriptive) {
+          data.descriptive = descriptive;
+        }
+        var grade = $('#grade').val();
+        if (grade) {
+          data.grade = grade;
+        }
+        var standard = $('#standard').val();
+        if (standard) {
+          data.standard = standard;
+        }
+        window.OpenEd.api.request('/resources.json', data, function (data) {
           var template = '';
           $('#resource-cont').html('');
           $.each(data.resources, function () {

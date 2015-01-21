@@ -32,7 +32,7 @@
     },
 
     runOnInit: function () {
-      root.OpenEd.oninit && root.OpenEd.oninit();
+      root.OpenEd.oninit && root.OpenEd.oninit()
     },
 
     login: function (callback) {
@@ -50,28 +50,13 @@
     },
 
     logout: function (callback) {
-      var self = this;
-      this.xhr({
-        url: self.apiHost + '/oauth/revoke',
-        type: 'POST',
-        data: {
-          token: self.getToken()
-        },
-        headers: {
-          Authorization: 'Bearer ' + self.getToken()
-        },
-        success: function () {
-          self.saveToken({access_token: null, expires_in: null, token_type: null});
-          callback();
-        }
-      });
+      this.saveToken(null);  
     },
 
     saveToken: function (tokenData) {
       for (var name in tokenData) {
           localStorage.setItem(this.tokenPrefix + '.' + name, tokenData[name]);
       }
-      
     },
 
     getToken: function () {
@@ -85,15 +70,30 @@
           options.success(JSON.parse(xmlhttp.responseText));
         }
       }
-
-      xmlhttp.open(options.type || 'GET', options.url, true);
+      var type = options.type || 'GET';
+      var url = options.url;
+      if (type === 'GET') {
+        var urlData = '?';
+        var params = [];
+        for (var a in options.data) {
+          params.push(a + '=' + options.data[a]);
+        }
+        if (params.length) {
+          url += '?' + (params.join('&'));
+        }
+      }
+      xmlhttp.open(type, url, true);
       if (options.headers) {
         for (var name in options.headers) {
           xmlhttp.setRequestHeader(name, options.headers[name]);
         }
         
       }
-      xmlhttp.send(this.prepareReqData(options.data));
+      if (type !== 'GET') {
+        xmlhttp.send(this.prepareReqData(options.data));
+      } else {
+        xmlhttp.send();
+      }
     },
 
     request: function (api, data, callback) {
@@ -108,12 +108,7 @@
         });
     },
 
-    prepareReqData: function (obj) {
-      var data = new FormData();
-      for(var p in obj)
-        if (obj.hasOwnProperty(p)) {
-          data.append(p, obj[p]);
-        }
+    prepareReqData: function (data) {
       return data;
     },
     /*
