@@ -77,7 +77,7 @@ argument *error* is empty if success
 ```
 window.OpenEd.api.logout(callback)
 ```
-### request(apiName, data, callback)
+### request(apiName, data, callback, errorCallback)
 Make a request to OpenEd API with OAuth access_token. More info http://docs.opened.apiary.io/
 #### Parameters:
 **apiName** - string
@@ -86,10 +86,32 @@ API end point
 query data object
 **callback(responseData)** - function
 argument *responseData* - result data object
+**errorCallback(error)** - function
+argument *error* - error object
 #### Example
 ```
-window.OpenEd.api.request(apiName, data, callback)
+window.OpenEd.api.request(apiName, data, callback, errorCallback)
 ```
+
+### verifyToken(callback)
+Veryfies current user token.
+
+#### Parameters:
+**callback(error)** - function
+argument *error* is empty on success
+
+#### Example
+```
+window.OpenEd.api.verifyToken(function (err) {
+  if (err) {
+    console.log('Sorry token is invalid');
+  } else {
+    console.log('Nice! Your token is perfect');
+  }
+});
+```
+
+
 ## API endpoints
 Full Api documentation can be found here http://docs.opened.apiary.io/
  
@@ -169,6 +191,34 @@ window.OpenEd.api.request('/resources.json', {
      ]
 }
 ```
+
+## OpenEd API Events
+OpenEd Oauth library has basic event support for all general proccess.
+### Methods
+#### on(eventName, callback)
+This method add an event handler(callback) for eventName.
+##### Example
+```
+  window.OpenEd.api.on('somethingHappend', function () {
+    //Note: that arguments will be filled depending on event type
+  });
+```
+#### off(eventName, callback)
+Removes event handler(callback) from the event namespace(eventName)
+##### Example
+```
+  window.OpenEd.api.off('somethingHappend', eventHandler);
+```
+### Auth Events
+#### userLoggedIn
+This event triggers when current user grants access to API. Its fired on ``` login ``` right before the callback. And also it can be fired when user already had hes token in session and it was verified successfully.
+##### Example
+```
+  window.OpenEd.api.on('auth.userLoggedIn', function () {
+    //Your logic here
+  });
+``` 
+
  
 ## Async loading
  

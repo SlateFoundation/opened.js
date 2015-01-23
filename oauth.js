@@ -55,6 +55,7 @@
         //check logged in status
         var self = this;
         this.checkLoginStatus(function () {
+          self.trigger('auth.userLoggedIn');
           callback && callback();
         });
       } else {
@@ -197,6 +198,7 @@
 
     _setToken: function (token) {
       this.saveToken(this.parseToken(token));
+      this.trigger('auth.userLoggedIn');
       this._lastCallback && this._lastCallback();
     },
 
