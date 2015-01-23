@@ -181,7 +181,7 @@ window.OpenEd.api.request('/resources.json', {
 <script src="oauth.js" async="true"></script>
 ```
  
-## OpenEd Implict Flow
+## OpenEd Implicit Flow
  
 1. User goes to your app
 2. User sends an action to login with OpenEd Provider
