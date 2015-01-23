@@ -8,26 +8,57 @@
 
     tokenPrefix: '_openEd',
 
-    isInited: false,
+    apiHost: 'https://api-staging.opened.io',
 
-    apiHost: 'https://api.opened.io',
+    openedHost: 'http://local.opened.io:9000',
 
-    openedHost: 'http://opened.io',
+    _events: {},
+
+    on: function (eventName, callback) {
+      if (eventName && callback) {
+        if (!this._events[eventName]) {
+          this._events[eventName] = [];
+        }
+        this._events[eventName].push(callback);
+      }
+    },
+
+    off: function (eventName, callback) {
+      if (eventName && callback) {
+        if (this._events[eventName]) {
+          var callbackIndex = this._events[eventName].indexOf(callback);
+          if (callbackIndex >= 0) {
+            this._events[eventName].slice(callbackIndex, 1);
+          }
+        }
+      }
+    },
+
+    _trigger: function () {
+      var args = Array.prototype.slice.call(arguments);
+      var eventName = args.splice(1)[0];
+      var eventsArr = this._events[eventName];
+      if (eventsArr && eventsArr.length) {
+        eventsArr.forEach(function (callback) {
+          callback.apply(null, args);
+        });
+      }
+    },
     
-    init: function (options) {
+    init: function (options, callback) {
       if (!options || !options.client_id) {
         throw new Error('Bad init options.');
       }
       this.options = options;
       var token = this.getToken();
-      if (false && token && options.status) {//not implemented
+      if (token && options.status) {
         //check logged in status
         var self = this;
         this.checkLoginStatus(function () {
-          self.isInited = true;
+          callback && callback();
         });
       } else {
-          this.isInited = true;
+        callback && callback();
       }
     },
 
@@ -50,12 +81,16 @@
     },
 
     logout: function (callback) {
-      this.saveToken(null);  
+      this.resetToken();  
+    },
+
+    resetToken: function () {
+      this.saveToken({access_token: null});  
     },
 
     saveToken: function (tokenData) {
       for (var name in tokenData) {
-          localStorage.setItem(this.tokenPrefix + '.' + name, tokenData[name]);
+        localStorage.setItem(this.tokenPrefix + '.' + name, tokenData[name]);
       }
     },
 
@@ -68,6 +103,8 @@
       xmlhttp.onreadystatechange=function(){
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
           options.success(JSON.parse(xmlhttp.responseText));
+        } else {
+          options.error && options.error(JSON.parse(xmlhttp.statusText))
         }
       }
       var type = options.type || 'GET';
@@ -96,53 +133,84 @@
       }
     },
 
-    request: function (api, data, callback) {
-        var self = this;
-        this.xhr({
-            url: this.apiHost + api,
-            data: data,
-            success: callback,
-            headers: {
-                Authorization: 'Bearer ' + self.getToken()
-            }
+    request: function (api, data, callback, errorCallback) {
+      var self = this;
+      this.xhr({
+        url: this.apiHost + api,
+        data: data,
+        success: callback,
+        error: errorCallback,
+        headers: {
+          Authorization: 'Bearer ' + self.getToken()
+        }
+      });
+    },
+
+    verifyToken: function (callback) {
+      var self = this;
+      if (this.checkTokenDate()) {
+        this.request('/oauth/token/info', null, function (token) {
+          if (token && token.application && token.application.uid && token.application.uid === self.options.client_id) {
+            callback();
+          } else {
+            self.resetToken();
+            callback(new Error('Wrong client id'));
+          }
+        }, function (error) {
+          self.resetToken();
+          callback(error);
         });
+      } else {
+        callback(new Error('token has expired'));
+      }
     },
 
     prepareReqData: function (data) {
       return data;
     },
-    /*
-    checkLoginStatus: function (callback) {
-      callback(false);
-      return false;
-      
-      var token = this.getToken();
-      if (token) {
-        this.xhr({
-          type: 'post',
-          url: '',
-          data: {},
-          success: function (response) {
-            
-          }
-        });
-      }
-      
+
+    checkTokenDate: function () {
+      var tokenDate = new Date(parseInt(localStorage.getItem(this.tokenPrefix + '.expires_in')));
+      var now = this.now();
+      return now.getTime() < tokenDate.getTime();
     },
-    */
+
+    expairDate: function (expairsIn) {
+      var date = this.now();
+      date.setTime(date.getTime() + (parseInt(expairsIn) * 1000) );
+      return date;
+    },
+
+    now: function () {
+      return new Date();
+    },
+
+    checkLoginStatus: function (callback) {
+      this.verifyToken(function (err) {
+        if (err) {
+          callback(err);
+        } else {
+          callback();
+        }
+      });
+    },
+
     _setToken: function (token) {
-        this.saveToken(this.parseToken(token));
-        this._lastCallback && this._lastCallback();
+      this.saveToken(this.parseToken(token));
+      this._lastCallback && this._lastCallback();
     },
 
     parseToken: function (token) {
-        var params = token.substr(1);
-        var result = {};
-        params.split('&').forEach(function (paramPairStr) {
-            var paramPair = paramPairStr.split('=');
-            result[paramPair[0]] = paramPair[1];
-        });
-        return result;
+      var params = token.substr(1);
+      var result = {};
+      params.split('&').forEach(function (paramPairStr) {
+        var paramPair = paramPairStr.split('=');
+        result[paramPair[0]] = paramPair[1];
+      });
+      if (result.expires_in) {
+        result.expires_in = this.expairDate(result.expires_in).getTime();
+      }
+      return result;
     }
 
   };
