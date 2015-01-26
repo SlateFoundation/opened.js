@@ -10,7 +10,7 @@
 
     apiHost: 'https://api-staging.opened.io',
 
-    openedHost: 'http://local.opened.io:9000',
+    openedHost: 'http://staging.opened.io',
 
     _events: {},
 
