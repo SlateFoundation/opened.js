@@ -106,7 +106,7 @@ window.OpenEd.api.request(apiName, data, callback, errorCallback)
 ```
 
 ### verifyToken(callback)
-Veryfies current user token.
+Verifies current user token.
 
 #### Parameters:
 **callback(error)** - function

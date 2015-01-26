@@ -211,7 +211,7 @@
       return now.getTime() < tokenDate.getTime();
     },
 
-    expairDate: function (expairsIn) {
+    expireDate: function (expairsIn) {
       var date = this.now();
       date.setTime(date.getTime() + (parseInt(expairsIn) * 1000) );
       return date;
@@ -238,7 +238,7 @@
         if (!err) {
           self.trigger('auth.userLoggedIn', token);
         }
-        self._lastCallback && this._lastCallback(err);
+        self._lastCallback && self._lastCallback(err);
       })
       
     },
@@ -251,7 +251,7 @@
         result[paramPair[0]] = paramPair[1];
       });
       if (result.expires_in) {
-        result.expires_in = this.expairDate(result.expires_in).getTime();
+        result.expires_in = this.expireDate(result.expires_in).getTime();
       }
       return result;
     }
