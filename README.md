@@ -18,7 +18,8 @@ This JavaScript library lets you integrate with the OpenEd resource library from
 - Init your app
 ``` 
 window.OpenEd.api.init(
-    {client_id: 'your app id here', redirect_uri: 'your application success callback uri'}
+    {client_id: 'your app id here', redirect_uri: 'your application success callback uri'},
+    callback
 ) 
 ```
 - Run ``` window.OpenEd.api.login() ```. It will open a popup with OpenEd oauth flow
@@ -26,7 +27,7 @@ window.OpenEd.api.init(
 - Now you can access OpenEd API endpoints  via ``` window.OpenEd.api.request() ```
  
 ## Methods
-### init(initOptions)
+### init(initOptions, callback)
 
 Inits OpenEd API. You should pass your client id and redirect_uri.
 
@@ -45,10 +46,17 @@ This method is required for further work with OpenEd API.
  Your apps callback url. 
  
  Example: 'https://exmaple.com/oauth-callback/'
- 
+
+**callback** - (optional) callback function. Fired when OpenEd API is fully inited.
+
 #### Example
 ```
-window.OpenEd.api.init(initOptions)
+window.OpenEd.api.init({
+    client_id: 'your client id',
+    redirect_uri: 'your callback url'
+}, function(){
+    //OpenEd is inited here
+});
 ```
  
 ### login(callback)

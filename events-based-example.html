@@ -72,26 +72,34 @@
       window.OpenEd.api.init({
         client_id: '66d0354299f860b4e39c56979f5cfd7d5216f67ce958c19ad5a3a68e6b0a2399',
         redirect_uri: 'http://oauth2.openedtest.com:4200/callback.html'
-      }, function () {
-        //Api init successfully here
+	  }, function () {
+	    //Api init successfully here
         console.log('OpenEd ready to use!');
-      });
-      $('#login').click(function(){
-        window.OpenEd.api.login(function () {
-          //your successfully signin here
-          window.OpenEd.api.request('/users/me.json', null, function (data) {
-            $('.user-cont').html('email:' + data.email);
-            $('#login').hide();
-            $('.loggedin-cont').show();
-          });
+	  });
+      //Listen to OpenEd User SignIn event.
+      //Called when user grants access to openEd
+      window.OpenEd.api.on('auth.userLoggedIn', function () {
+        //User has access to OpenEd API at this point
+        window.OpenEd.api.request('/users/me.json', null, function (data) {
+          $('.user-cont').html('email:' + data.email);
+	      $('#login').hide();
+          $('.loggedin-cont').show();
         });
+      });
+	  $('#login').click(function(){
+        //Open Signin popup
+	    window.OpenEd.api.login();
+	  });
+      //Listens to OpenEd SiggOut event
+      //Is triggered when users loses access with OpenEd
+      window.OpenEd.api.on('auth.userSignedOut', function () {
+        //User is signout at this point
+        $('#login').show();
+        $('.loggedin-cont').hide();
       });
       $('#logout').click(function(){
-        window.OpenEd.api.logout(function () {
-          //callback after logout action
-          $('#login').show();
-          $('.loggedin-cont').hide();
-        });
+        //trigger logout
+        window.OpenEd.api.logout();
       });
       $('#search').click(function(){
         var data = {};
@@ -107,6 +115,7 @@
         if (standard) {
           data.standard = standard;
         }
+        //Calling search resources API endpoint
         window.OpenEd.api.request('/resources.json', data, function (data) {
           var template = '';
           $('#resource-cont').html('');

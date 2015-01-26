@@ -34,13 +34,14 @@
       }
     },
 
-    _trigger: function () {
+    trigger: function () {
       var args = Array.prototype.slice.call(arguments);
-      var eventName = args.splice(1)[0];
+      var eventName = args.slice(0)[0];
       var eventsArr = this._events[eventName];
+      var data = args.slice(1);
       if (eventsArr && eventsArr.length) {
         eventsArr.forEach(function (callback) {
-          callback.apply(null, args);
+          callback.apply(null, data);
         });
       }
     },
@@ -82,11 +83,31 @@
     },
 
     logout: function (callback) {
-      this.resetToken();  
+      var self = this;
+      var token = self.getToken();
+      if (token) {
+        this.xhr({
+          type: 'POST',
+          url: self.apiHost + '/oauth/revoke',
+          data: {token: token},
+          success: function () {
+            self.resetToken();  
+            callback && callback();
+          },
+          error: function () {
+            self.resetToken();  
+            callback && callback();
+          }
+        });
+      } else {
+        self.resetToken();  
+        callback && callback();
+      }
     },
 
     resetToken: function () {
       this.saveToken({access_token: null});  
+      this.trigger('auth.userSignedOut');
     },
 
     saveToken: function (tokenData) {
@@ -102,10 +123,12 @@
     xhr: function (options) {
       var xmlhttp=new XMLHttpRequest();
       xmlhttp.onreadystatechange=function(){
-        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-          options.success(JSON.parse(xmlhttp.responseText));
-        } else {
-          options.error && options.error(JSON.parse(xmlhttp.statusText))
+        if (xmlhttp.readyState==4) {
+          if (xmlhttp.status==200) {
+            options.success(JSON.parse(xmlhttp.responseText));
+          } else if (xmlhttp.status>=400) {
+            options.error && options.error(JSON.parse(xmlhttp.statusText));
+          }
         }
       }
       var type = options.type || 'GET';
@@ -167,7 +190,7 @@
     },
 
     prepareReqData: function (data) {
-      return data;
+      return JSON.stringify(data);
     },
 
     checkTokenDate: function () {
@@ -198,7 +221,7 @@
 
     _setToken: function (token) {
       this.saveToken(this.parseToken(token));
-      this.trigger('auth.userLoggedIn');
+      this.trigger('auth.userLoggedIn', token);
       this._lastCallback && this._lastCallback();
     },
 
