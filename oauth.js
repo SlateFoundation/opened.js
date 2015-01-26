@@ -8,9 +8,9 @@
 
     tokenPrefix: '_openEd',
 
-    apiHost: 'https://openedengine-sandbox1.herokuapp.com',
+    apiHost: 'https://api-staging.opened.io',
 
-    openedHost: 'http://local.opened.io:9000',
+    openedHost: 'https://staging.opened.io',
 
     _events: {},
 
@@ -130,7 +130,6 @@
           if (xmlhttp.status==200) {
             options.success(JSON.parse(xmlhttp.responseText));
           } else if (xmlhttp.status>=400) {
-            console.log(xmlhttp)
             var error = {error: 'Unknown error'};
             if (xmlhttp.responseText) {
               error = JSON.parse(xmlhttp.responseText)
@@ -191,7 +190,6 @@
             callback(new Error('Wrong client id'));
           }
         }, function (error) {
-          console.log('!!!', error);
           self.resetToken();
           callback(error);
         });
