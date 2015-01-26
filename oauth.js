@@ -153,6 +153,9 @@
         }
       }
       xmlhttp.open(type, url, true);
+      if (type === 'POST') {
+        xmlhttp.setRequestHeader('Content-Type', 'application/json');
+      }
       if (options.headers) {
         for (var name in options.headers) {
           xmlhttp.setRequestHeader(name, options.headers[name]);
