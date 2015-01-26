@@ -8,9 +8,9 @@
 
     tokenPrefix: '_openEd',
 
-    apiHost: 'https://api-staging.opened.io',
+    apiHost: 'https://openedengine-sandbox1.herokuapp.com',
 
-    openedHost: 'http://staging.opened.io',
+    openedHost: 'http://local.opened.io:9000',
 
     _events: {},
 
@@ -97,6 +97,9 @@
           error: function () {
             self.resetToken();  
             callback && callback();
+          },
+          headers: {
+            Authorization: 'Bearer ' + self.getToken()
           }
         });
       } else {
@@ -106,7 +109,7 @@
     },
 
     resetToken: function () {
-      this.saveToken({access_token: null});  
+      localStorage.removeItem(this.tokenPrefix + '.access_token');  
       this.trigger('auth.userSignedOut');
     },
 
@@ -127,7 +130,14 @@
           if (xmlhttp.status==200) {
             options.success(JSON.parse(xmlhttp.responseText));
           } else if (xmlhttp.status>=400) {
-            options.error && options.error(JSON.parse(xmlhttp.statusText));
+            console.log(xmlhttp)
+            var error = {error: 'Unknown error'};
+            if (xmlhttp.responseText) {
+              error = JSON.parse(xmlhttp.responseText)
+            } else if (xmlhttp.statusText) {
+              error = JSON.parse(xmlhttp.statusText)
+            }
+            options.error && options.error(error);
           }
         }
       }
@@ -181,6 +191,7 @@
             callback(new Error('Wrong client id'));
           }
         }, function (error) {
+          console.log('!!!', error);
           self.resetToken();
           callback(error);
         });
@@ -221,8 +232,14 @@
 
     _setToken: function (token) {
       this.saveToken(this.parseToken(token));
-      this.trigger('auth.userLoggedIn', token);
-      this._lastCallback && this._lastCallback();
+      var self = this;
+      this.verifyToken(function (err) {
+        if (!err) {
+          self.trigger('auth.userLoggedIn', token);
+        }
+        self._lastCallback && this._lastCallback(err);
+      })
+      
     },
 
     parseToken: function (token) {

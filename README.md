@@ -47,6 +47,10 @@ This method is required for further work with OpenEd API.
  
  Example: 'https://exmaple.com/oauth-callback/'
 
+ - **status** - Boolean, default: false
+
+ On init checks if user is already has acces to OpenEd API
+
 **callback** - (optional) callback function. Fired when OpenEd API is fully inited.
 
 #### Example
