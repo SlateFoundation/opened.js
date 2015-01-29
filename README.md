@@ -1,8 +1,8 @@
 # opened-oauth.js
 
-This JavaScript library lets you integrate with the OpenEd resource library from your web application pages.  
+This JavaScript library lets you integrate with the OpenEd resource library from your web application pages.  This JavaScript library focuses on the process of using OpenEd as an OAuth provider to login to OpenEd and then perform actions such as queries of the resource library. 
 
-## Getting started
+## Getting Started
 - Create a callback route on your website (you can see an example at callback.html)
 ```
 <script>
@@ -29,9 +29,9 @@ window.OpenEd.api.init(
 ## Methods
 ### init(initOptions, callback)
 
-Inits OpenEd API. You should pass your client id and redirect_uri.
+Initializes the OpenEd API. You should pass your client id and redirect_uri.
 
-This method is required for further work with OpenEd API.
+This is require to execute subsequent calls with the API.
 
 #### Parameters:
 **initOptions:**
@@ -49,9 +49,9 @@ This method is required for further work with OpenEd API.
 
  - **status** - Boolean, default: false
 
- On init checks if user is already has acces to OpenEd API
+ On init checks if user already has access to OpenEd API
 
-**callback** - (optional) callback function. Fired when OpenEd API is fully inited.
+**callback** - (optional) callback function. Fired when OpenEd API is fully initialized.
 
 #### Example
 ```
@@ -64,7 +64,7 @@ window.OpenEd.api.init({
 ```
  
 ### login(callback)
-Runs OpenEd OAuth flow. Opens a popup with OpenEd siginin flow and redirects on success(sets the token)
+Runs OpenEd OAuth flow. Opens a popup with OpenEd signin/signup capability. Redirects on success(sets the token)
 #### Parameters:
  
 **callback(error)** - function
