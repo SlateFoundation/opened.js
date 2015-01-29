@@ -13,8 +13,8 @@ This JavaScript library lets you integrate with the OpenEd resource library from
 	window.close();
 </script>
 ```
-- Get application key by sending a request to api@opened.io with a redirect_uri - url that you created in step 1 (more info http://developers.opened.io/)
-- Download and include opened-oauth.js to your web-site
+- Get an application key by sending a request to api@opened.io with a redirect_uri - url that you created in step 1 (more info http://developers.opened.io/).  Indicate that you agree to [API terms](http://developers.opened.io)
+- Download and include opened-oauth.js in your web site
 - Init your app
 ``` 
 window.OpenEd.api.init(
@@ -22,9 +22,9 @@ window.OpenEd.api.init(
     callback
 ) 
 ```
-- Run ``` window.OpenEd.api.login() ```. It will open a popup with OpenEd oauth flow
-- After success you have your token avaivable via ``` window.OpenEd.api.getToken() ```
-- Now you can access OpenEd API endpoints  via ``` window.OpenEd.api.request() ```
+- Run ``` window.OpenEd.api.login() ```. It will open a popup with OpenEd OAuth flow. 
+- After success you have your token available via ``` window.OpenEd.api.getToken() ```
+- Now you can access OpenEd API endpoints via ``` window.OpenEd.api.request() ```
  
 ## Methods
 ### init(initOptions, callback)
@@ -43,9 +43,9 @@ This is require to execute subsequent calls with the API.
  
  - **redirect_uri** - String, required
  
- Your apps callback url. 
+ Your app's callback URL. 
  
- Example: 'https://exmaple.com/oauth-callback/'
+ Example: 'https://example.com/oauth-callback/'
 
  - **status** - Boolean, default: false
 
@@ -125,7 +125,7 @@ window.OpenEd.api.verifyToken(function (err) {
 
 
 ## API endpoints
-Full Api documentation can be found here http://docs.opened.apiary.io/
+Full Api documentation can be found [here](http://docs.opened.apiary.io/)
  
 ### /users/me.json 
  
@@ -256,4 +256,4 @@ This event triggers when current user grants access to API. Its fired on ``` log
  
 ## Security issues
  
-Please read this http://technotes.iangreenleaf.com/posts/closing-a-nasty-security-hole-in-oauth.html
+Please read [this](http://technotes.iangreenleaf.com/posts/closing-a-nasty-security-hole-in-oauth.html)
