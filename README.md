@@ -20,7 +20,7 @@ This JavaScript library lets you integrate with the OpenEd resource library from
 
 ### Getting API keys for your application
 - Indicate that you agree to [API terms](http://developers.opened.io/)
-- Send an email request to api@opened.io. Request email should contain: your application url, your application callback script URL (this is the URL of the page you created in step 1)
+- Send an email request to api@opened.io. Request email should contain: your application URL, your application callback script URL (this is the URL of the page you created in step 1)
 
 *Note*: For more info follow this [page](http://developers.opened.io/)
 
@@ -58,7 +58,7 @@ window.OpenEd.api.login()
 ```javascript
 // Request for current user info
 window.OpenEd.api.request('/users/me.json', null, function (user) {
-    // Recived current user info
+    // Received current user info
     console.log(user);
 });
 ```
@@ -83,7 +83,7 @@ This is require to execute subsequent calls with the API.
 
  - **status** - Boolean, default: false
 
- On initializ finished checks if user is already has access to OpenEd API
+ On initialize finished checks if user is already has access to OpenEd API
 
 **callback** - (optional) callback function. Fired when OpenEd API is fully initialized.
 
@@ -93,7 +93,7 @@ window.OpenEd.api.init({
     client_id: 'your client id',
     redirect_uri: 'your callback url'
 }, function(){
-    //OpenEd is inited here
+    //OpenEd is initialized here
     // ...
     // Your code here
     // ...
@@ -250,7 +250,7 @@ window.OpenEd.api.request('/resources.json', {
     descriptive: 'keyword search'
 }, function (resources) {
     // The results of your query
-    console.log(resorces);
+    console.log(resources);
 });
 ```
 ##### response:
@@ -278,7 +278,7 @@ window.OpenEd.api.request('/resources.json', {
 ```
 
 ## OpenEd API Events
-OpenEd Oauth library has basic event support for all general proccess.
+OpenEd Oauth library has basic event support for all general process.
 ### Methods
 #### on(eventName, callback)
 This method add an event handler(callback) for eventName.
