@@ -2,6 +2,27 @@
 
 This JavaScript library lets you integrate with the OpenEd resource library from your web application pages. This JavaScript library focuses on the process of using OpenEd as an OAuth provider to login to OpenEd and then perform actions such as queries of the resource library.
 
+## Table of content
+1. [Getting Started](#getting-started)
+  - [Setup your application](#setup-your-application)
+  - [Getting API keys for your application](#getting-api-keys-for-your-application)
+  - [Working with OpenEd API](#working-with-opened-api)
+2. [Methods](#methods)
+  - [init](#init)
+  - [login](#login)
+  - [logout](#logout)
+  - [request](#request)
+  - [verifyToken](#verifytoken)
+3. [API endpoints](#api-endpoints)
+  - [Me](#me)
+  - [Resources](#resources)
+4. [OpenEd API Events](#opened-api-events)
+  - [Event Methods](#event-methods)
+  - [Auth Events](#auth-events)
+5. [Async loading](#async-loading)
+6. [OpenEd Implicit Flow](#opened-implicit-flow)
+7. [Security issues](#security-issues)
+
 ## Getting Started
 
 ### Setup your application
@@ -20,7 +41,9 @@ This JavaScript library lets you integrate with the OpenEd resource library from
 
 ### Getting API keys for your application
 - Indicate that you agree to [API terms](http://developers.opened.io/)
-- Send an email request to api@opened.io. Request email should contain: your application URL, your application callback script URL (this is the URL of the page you created in step 1)
+- Send an email request to api@opened.io. Request email should contain: 
+  - your application URL
+  - your application callback script URL (this is the URL of the page you created in step 1)
 
 *Note*: For more info follow this [page](http://developers.opened.io/)
 
@@ -64,19 +87,22 @@ window.OpenEd.api.request('/users/me.json', null, function (user) {
 ```
  
 ## Methods
-### init(initOptions, callback)
+### init
+arguments - **initOptions**, **callback**
 
 Initializes the OpenEd API. You should pass your client id and redirect_uri.
 This is require to execute subsequent calls with the API.
 
-#### Parameters:
+#### Arguments:
 **initOptions:**
  - **client_id** - String, required
+
  Your client application id. For more info on how to get client id - please visit [this page](http://developers.opened.io/)
  
  *Example*: 'fj34892fj20984ujgf3029guj89324ujgt09u4g'
  
  - **redirect_uri** - String, required
+
  Your app's callback URL. 
  
  *Example*: 'https://example.com/oauth-callback/'
@@ -100,9 +126,13 @@ window.OpenEd.api.init({
 });
 ```
  
-### login(callback)
-Runs OpenEd OAuth flow. Opens a popup with OpenEd signin/signup capability. Redirects on success(sets the token)
-#### Parameters:
+### login
+arguments - callback
+
+Runs OpenEd OAuth flow. Opens a popup with OpenEd signin/signup capability. Redirects on success(sets the token).
+You can pass a callback argument, which will be called after user successfully grants token.
+The best pratice is to use [event system](#opened-api-events).
+#### Arguments:
  
 **callback(error)** - (optional) function
  
@@ -124,12 +154,15 @@ window.OpenEd.api.login(function (err) {
 
 });
 ```
-### logout(callback)
+### logout
+arguments - callback
 
 Revokes current user OAuth access_token. Makes API inaccessible by current user OAuth access_token.
-
-#### Parameters:
+You can pass a callback argument that is called when token rejected successfully, 
+but the best pratice is to use [event system](#opened-api-events).
+#### Arguments:
 **callback(error)** - (optional) function
+
 A callback function that fires on error/success
  
 argument *error* is empty if success
@@ -145,16 +178,24 @@ window.OpenEd.api.logout(function (err) {
 });
 ```
 
-### request(apiName, data, callback, errorCallback)
+### request
+arguments - apiName, data, callback, errorCallback
+
+Allows user to communicate with OpenEd API. This is the main method for OpenEd API calls.
 Make a request to OpenEd API with OAuth access_token. More info [here](http://docs.opened.apiary.io/)
-#### Parameters:
+#### Arguments:
 **apiName** - string
+
 API end point name
 **data** - object
+
 query data object
 **callback(responseData)** - function
+
 argument *responseData* - result data object
+
 **errorCallback(error)** - function
+
 argument *error* - error object
 #### Example
 ```javascript
@@ -172,10 +213,13 @@ window.OpenEd.api.request(
 );
 ```
 
-### verifyToken(callback)
-Verifies current user token.
+### verifyToken
+arguments - callback
 
-#### Parameters:
+Verifies current user token. Can be used to see if the token is outdated or invalid.
+Also this method verifies the token based on our application clients id.
+
+#### Arguments:
 **callback(error)** - (optional) function
 argument *error* is empty on success
 
@@ -194,7 +238,8 @@ window.OpenEd.api.verifyToken(function (err) {
 ## API endpoints
 Full Api documentation can be found [here](http://docs.opened.apiary.io/)
  
-### /users/me.json 
+### Me
+url - /users/me.json 
  
 Returns current user object
  
@@ -218,7 +263,8 @@ window.OpenEd.api.request('/users/me.json', null, function (user){
 }
 ```
  
-### /resources.json 
+### Rosources
+url - /resources.json 
  
 Makes a resource query. 
  
@@ -279,7 +325,7 @@ window.OpenEd.api.request('/resources.json', {
 
 ## OpenEd API Events
 OpenEd Oauth library has basic event support for all general process.
-### Methods
+### Event Methods
 #### on(eventName, callback)
 This method add an event handler(callback) for eventName.
 ##### Example
