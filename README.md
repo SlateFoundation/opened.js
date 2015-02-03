@@ -127,11 +127,11 @@ window.OpenEd.api.init({
 ```
  
 ### login
-arguments - callback
+arguments - **callback**
 
 Runs OpenEd OAuth flow. Opens a popup with OpenEd signin/signup capability. Redirects on success(sets the token).
 You can pass a callback argument, which will be called after user successfully grants token.
-The best pratice is to use [event system](#opened-api-events).
+The best practice is to use [event system](#opened-api-events).
 #### Arguments:
  
 **callback(error)** - (optional) function
@@ -155,11 +155,11 @@ window.OpenEd.api.login(function (err) {
 });
 ```
 ### logout
-arguments - callback
+arguments - **callback**
 
 Revokes current user OAuth access_token. Makes API inaccessible by current user OAuth access_token.
 You can pass a callback argument that is called when token rejected successfully, 
-but the best pratice is to use [event system](#opened-api-events).
+but the best practice is to use [event system](#opened-api-events).
 #### Arguments:
 **callback(error)** - (optional) function
 
@@ -179,7 +179,7 @@ window.OpenEd.api.logout(function (err) {
 ```
 
 ### request
-arguments - apiName, data, callback, errorCallback
+arguments - **apiName**, **data**, **callback**, **errorCallback**
 
 Allows user to communicate with OpenEd API. This is the main method for OpenEd API calls.
 Make a request to OpenEd API with OAuth access_token. More info [here](http://docs.opened.apiary.io/)
@@ -214,7 +214,7 @@ window.OpenEd.api.request(
 ```
 
 ### verifyToken
-arguments - callback
+arguments - **callback**
 
 Verifies current user token. Can be used to see if the token is outdated or invalid.
 Also this method verifies the token based on our application clients id.
@@ -239,7 +239,7 @@ window.OpenEd.api.verifyToken(function (err) {
 Full Api documentation can be found [here](http://docs.opened.apiary.io/)
  
 ### Me
-url - /users/me.json 
+URL - **/users/me.json**
  
 Returns current user object
  
@@ -264,7 +264,7 @@ window.OpenEd.api.request('/users/me.json', null, function (user){
 ```
  
 ### Rosources
-url - /resources.json 
+URL - **/resources.json**
  
 Makes a resource query. 
  
