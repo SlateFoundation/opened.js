@@ -7,21 +7,22 @@ This JavaScript library lets you integrate with the OpenEd resource library from
   - [Setup your application](#setup-your-application)
   - [Getting API keys for your application](#getting-api-keys-for-your-application)
   - [Working with OpenEd API](#working-with-opened-api)
-2. [Methods](#methods)
+2. [Exmaples](#examples)
+3. [Methods](#methods)
   - [init](#init)
   - [login](#login)
   - [logout](#logout)
   - [request](#request)
   - [verifyToken](#verifytoken)
-3. [API endpoints](#api-endpoints)
+4. [API endpoints](#api-endpoints)
   - [Me](#me)
   - [Resources](#resources)
-4. [OpenEd API Events](#opened-api-events)
+5. [OpenEd API Events](#opened-api-events)
   - [Event Methods](#event-methods)
   - [Auth Events](#auth-events)
-5. [Async loading](#async-loading)
-6. [OpenEd Implicit Flow](#opened-implicit-flow)
-7. [Security issues](#security-issues)
+6. [Async loading](#async-loading)
+7. [OpenEd Implicit Flow](#opened-implicit-flow)
+8. [Security issues](#security-issues)
 
 ## Getting Started
 
@@ -85,7 +86,14 @@ window.OpenEd.api.request('/users/me.json', null, function (user) {
     console.log(user);
 });
 ```
- 
+## Examples
+For more details you can checkout OpenEd API commented example applications.
+
+Examples:
+- [Simple example](/index.html)
+- [Event-based example](/events-based-example.html)
+
+*Note*: We recommend following the event-based technic for more advanced futures of the API
 ## Methods
 ### init
 arguments - **initOptions**, **callback**
