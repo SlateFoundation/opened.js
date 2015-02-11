@@ -8,9 +8,9 @@
 
     tokenPrefix: '_openEd',
 
-    apiHost: 'https://api-staging.opened.io',
+    apiHost: 'https://api.opened.io',
 
-    openedHost: 'https://staging.opened.io',
+    openedHost: 'https://opened.io',
 
     _events: {},
 
