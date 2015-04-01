@@ -29,7 +29,7 @@ window.OpenEd.api.init(
 
 ## Querying Resources from the OpenEd Resource Library
 
-[**init**  - this initialize the JS library](#initinitoptions-callback)
+**init**  - this initialize the JS library (details [here](#initinitoptions-callback))
 
 ```javascript
 window.OpenEd.api.init({
@@ -42,7 +42,7 @@ window.OpenEd.api.init({
 
 ```
 
-[**login** - login with the user identity via OpenEd OAuth provider](#logincallback)
+**login** - login with the user identity via OpenEd OAuth provider (details [here](#logincallback))
 
 ```javascript
 window.OpenEd.api.login(function () {
@@ -51,16 +51,45 @@ window.OpenEd.api.login(function () {
 });
 ```
 
-**[request - search for resources]
+**request** - do REST API call like search for resources (details [here](#requestapiname-data-callback-errorcallback))
+example call can search based on standard, keyword, and resource_types (e.g. all A.APR.1 polynomial videos OR assessments for 9th grade)
+```javascript
+search_params = {
+  standard: 'A.APR.1',
+  descriptive: 'polynomial',
+  resource_types: ['video', 'assessment'],
+  grade: '9'
+}
+window.OpenEd.api.request('/resources.json', search_params, function (data) {
+  // handling the result
+  var template = '';
+  $('#resource-cont').html('');
+  $.each(data.resources, function () {
+    template += '<div class="panel panel-default">';
+    template += '<div class="panel-heading">';
+    template += this.title;
+    template += '</div>';  
+    template += '<div class="panel-body">';
+    template += '<img scr="' + this.thumb + '">';
+    template += '</div>';  
+    template += '</div>'; 
+  });
+  $(template).appendTo('#resource-cont');
+});
+```
 
-(example resources.json call for search) (link to full resources.json search doc in this document)
+**logout** - revoke OAuth token (details [here](#logoutcallback))
 
-example call can search based on standard, keyword, and resource_type (e.g. all A.APR.1 polynomial videos for 9th grade)
+```javascript
+window.OpenEd.api.login(function () {
+  //your successfully signin here
+  
+});
+```
 
-(handling the result)
-
-A longer example of this is [here](link to the index.html). 
+A longer example of this is [here](./blob/master/index.html). 
  
+
 ## JavaScript Method Reference
 ### init(initOptions, callback)
 
@@ -203,39 +232,36 @@ for more details visit http://docs.opened.apiary.io/
 - **grade** (string, optional, example: K) - restricts to specified grades (expressed as K,1, .. 12)
 - **grade_group** (string, optional, example: Elementary) - restricts to specified grade_group (e.g. "Elementary", "Middle School", "High School")
 - **contribution_name** (string, optional) - the name of the contribution (e.g. "BrightStorm", "KhanAcademy")
-- **resource_types** (string, optional ) - array of resource types which can be "video", "game", "assessment", "question"
+- **resource_types** (string, optional ) - array of resource types which can be "video", "game", "assessment", "homework", "lesson_plan"
  
 #### Example:
  
 ##### request:
-```
+```javascript
 window.OpenEd.api.request('/resources.json', {
-    offset: 10,
-    limit: 10,
-    descriptive: 'keyword search'
+    offset: 5,
+    limit: 5,
+    descriptive: 'area of a circle'
 }, callback)
 ```
 ##### response:
 ```json
 {
-    "meta":{
-        "pagination":{
-            "offset":10,
-            "total_entries":894208,
-            "entries":10,
-            "limit":10
-        }
-     },
-     "resources":[
-        {"standard_idents":["4.NBT.1"],"grade_idents":["4"],"grades_range":"4","course_id":null,"grade_group_ids":[46],"featured":false,"embeddable":false,"area_ids":[1],"area_titles":["Mathematics"],"subject_ids":[14],"subject_titles":["Number Sense and Operations"],"resource_type":"question","id":1077403,"state":"public","thumb":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg","thumbnails":{"mini":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg","small":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg","medium":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg","large":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg"},"contribution_name":"Pearson","publisher":"Pearson","owner_id":null,"share_url":"https://www.opened.io/resources/1077403","rating":5,"is_allowed":false,"is_locked":true,"title":"The 3 in 139 is how many times bigger than the 3 in 53?","description":"","is_premium":true,"duration":null,"my_rating":null,"safe_url":"https://www.opened.io/resources/1077403"},
-        {"standard_idents":["5.NBT.1"],"grade_idents":["5"],"grades_range":"5","course_id":null,"grade_group_ids":[46],"featured":false,"embeddable":false,"area_ids":[1],"area_titles":["Mathematics"],"subject_ids":[14,63],"subject_titles":["Number Sense and Operations","Mathematics"],"resource_type":"question","id":1100666,"state":"public","thumb":"https://s3.amazonaws.com/opened/contributions/riverside/assess_2_know.png","thumbnails":{"mini":"https://s3.amazonaws.com/opened/contributions/riverside/assess_2_know.png","small":"https://s3.amazonaws.com/opened/contributions/riverside/assess_2_know.png","medium":"https://s3.amazonaws.com/opened/contributions/riverside/assess_2_know.png","large":"https://s3.amazonaws.com/opened/contributions/riverside/assess_2_know.png"},"contribution_name":"Houghton Mifflin Harcourt","publisher":"Houghton Mifflin Harcourt","owner_id":null,"share_url":"https://www.opened.io/resources/1100666","rating":5,"is_allowed":false,"is_locked":true,"title":"The 3 in the number 124.035 represents the ______...","description":"","is_premium":true,"duration":null,"my_rating":null,"safe_url":"https://www.opened.io/resources/1100666"},
-        {"standard_idents":["1997.CA.7.MG.3.6"],"grade_idents":["7"],"grades_range":"7","course_id":null,"grade_group_ids":[47],"featured":false,"embeddable":false,"area_ids":[1],"area_titles":["Mathematics"],"subject_ids":[63],"subject_titles":["Mathematics"],"resource_type":"question","id":1102471,"state":"public","thumb":"https://s3.amazonaws.com/opened/contributions/riverside/assess_2_know.png","thumbnails":{"mini":"https://s3.amazonaws.com/opened/contributions/riverside/assess_2_know.png","small":"https://s3.amazonaws.com/opened/contributions/riverside/assess_2_know.png","medium":"https://s3.amazonaws.com/opened/contributions/riverside/assess_2_know.png","large":"https://s3.amazonaws.com/opened/contributions/riverside/assess_2_know.png"},"contribution_name":"Houghton Mifflin Harcourt","publisher":"Houghton Mifflin Harcourt","owner_id":null,"share_url":"https://www.opened.io/resources/1102471","rating":5,"is_allowed":false,"is_locked":false,"title":"A 3-dimensional cube is shown below.","description":"","is_premium":true,"duration":null,"my_rating":null,"safe_url":"https://www.opened.io/resources/1102471"},
-        {"standard_idents":["G.GPE.7"],"grade_idents":["10"],"grades_range":"10","course_id":null,"grade_group_ids":[51,80],"featured":false,"embeddable":false,"area_ids":[1],"area_titles":["Mathematics"],"subject_ids":[1,63],"subject_titles":["Geometry","Mathematics"],"resource_type":"question","id":1096588,"state":"public","thumb":"https://s3.amazonaws.com/opened/contributions/riverside/assess_2_know.png","thumbnails":{"mini":"https://s3.amazonaws.com/opened/contributions/riverside/assess_2_know.png","small":"https://s3.amazonaws.com/opened/contributions/riverside/assess_2_know.png","medium":"https://s3.amazonaws.com/opened/contributions/riverside/assess_2_know.png","large":"https://s3.amazonaws.com/opened/contributions/riverside/assess_2_know.png"},"contribution_name":"Houghton Mifflin Harcourt","publisher":"Houghton Mifflin Harcourt","owner_id":null,"share_url":"https://www.opened.io/resources/1096588","rating":5,"is_allowed":false,"is_locked":true,"title":"A 3-dimensional object is shown in 3 views below.","description":"","is_premium":true,"duration":null,"my_rating":null,"safe_url":"https://www.opened.io/resources/1096588"},
-        {"standard_idents":["A.APR.3"],"grade_idents":["9","10","11","12"],"grades_range":"9-12","course_id":null,"grade_group_ids":[49,48],"featured":false,"embeddable":false,"area_ids":[1],"area_titles":["Mathematics"],"subject_ids":[2],"subject_titles":["Algebra"],"resource_type":"question","id":1080309,"state":"public","thumb":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg","thumbnails":{"mini":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg","small":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg","medium":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg","large":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg"},"contribution_name":"Brandon DormanOpen","publisher":"Brandon DormanOpen","owner_id":null,"share_url":"https://www.opened.io/resources/1080309","rating":5,"is_allowed":false,"is_locked":true,"title":"The 3rd-degree polynomial function ","description":"","is_premium":true,"duration":null,"my_rating":null,"safe_url":"https://www.opened.io/resources/1080309"},
-        {"standard_idents":["S.CP.9"],"grade_idents":["9","10","11","12"],"grades_range":"9-12","course_id":null,"grade_group_ids":[53,80],"featured":false,"embeddable":false,"area_ids":[1],"area_titles":["Mathematics"],"subject_ids":[3,63],"subject_titles":["Statistics and Probability","Mathematics"],"resource_type":"question","id":1080538,"state":"public","thumb":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg","thumbnails":{"mini":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg","small":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg","medium":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg","large":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg"},"contribution_name":"Pearson","publisher":"Pearson","owner_id":null,"share_url":"https://www.opened.io/resources/1080538","rating":5,"is_allowed":false,"is_locked":true,"title":"A 4-digit number is formed from using the digits...","description":"","is_premium":true,"duration":null,"my_rating":null,"safe_url":"https://www.opened.io/resources/1080538"},
-        {"standard_idents":["A.CED.1"],"grade_idents":["9","10","11","12"],"grades_range":"9-12","course_id":null,"grade_group_ids":[49,48,80],"featured":false,"embeddable":false,"area_ids":[1],"area_titles":["Mathematics"],"subject_ids":[2,63],"subject_titles":["Algebra","Mathematics"],"resource_type":"question","id":1080526,"state":"public","thumb":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg","thumbnails":{"mini":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg","small":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg","medium":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg","large":"https://s3.amazonaws.com/opened/contributions/pearson/pearson_thumb.jpeg"},"contribution_name":"Pearson","publisher":"Pearson","owner_id":null,"share_url":"https://www.opened.io/resources/1080526","rating":5,"is_allowed":false,"is_locked":false,"title":"A 4.5 L solution of alcohol and water contains 25% alcohol.","description":"","is_premium":true,"duration":null,"my_rating":null,"safe_url":"https://www.opened.io/resources/1080526"},
-        {"standard_idents":["4.MD.2"],"grade_idents":["4"],"grades_range":"4","course_id":null,"grade_group_ids":[46],"featured":false,"embeddable":false,"area_ids":[1],"area_titles":["Mathematics"],"subject_ids":[6,63],"subject_titles":["Measurement \u0026 Data","Mathematics"],"resource_type":"question","id":1071646,"state":"public","thumb":"https://s3.amazonaws.com/opened/resource_types/images/question_freeresponse.png","thumbnails":{"mini":"https://s3.amazonaws.com/opened/resource_types/images/question_freeresponse.png","small":"https://s3.amazonaws.com/opened/resource_types/images/question_freeresponse.png","medium":"https://s3.amazonaws.com/opened/resource_types/images/question_freeresponse.png","large":"https://s3.amazonaws.com/opened/resource_types/images/question_freeresponse.png"},"contribution_name":"Janet Woodthorpe","publisher":"Janet Woodthorpe","owner_id":8611,"share_url":"https://www.opened.io/resources/1071646","rating":5,"is_allowed":true,"is_locked":true,"title":"A 5 gallon bottle of mountain spring water costs...","description":"A 5 gallon bottle of mountain spring water costs $6.50. A package including 4 single-quart packets of mountain spring water costs $1.80. If someone needs to buy 5 gallons of mountain spring water, how much money do they save by buying the 5 gallon bottle rather than packets of quarts? ","is_premium":null,"duration":null,"my_rating":null,"safe_url":"https://www.opened.io/resources/1071646"},
-     ]
+  "meta":{
+    "pagination":{
+      "offset":5,
+      "total_entries":8177,
+      "entries":5,
+      "limit":5
+      }
+    },
+    "resources":[
+      {"standard_idents":["3.MD.5"],"grade_idents":["3"],"grades_range":"3","group_id":null,"grade_group_ids":[46],"featured":true,"embeddable":false,"area_ids":[1],"area_titles":["Mathematics"],"subject_ids":[6,63],"subject_titles":["Measurement \u0026 Data","Mathematics"],"resource_type":"assessment","id":2165320,"state":"public","thumb":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","thumbnails":{"mini":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","small":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","medium":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","large":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png"},"contribution_name":"Brandon DormanOpen","publisher":"Brandon DormanOpen","owner_id":5781,"share_url":"https://www.opened.io/resources/2165320","rating":5,"is_allowed":true,"is_locked":false,"title":"Measure Area","description":null,"is_premium":true,"duration":null,"my_rating":null,"safe_url":"https://www.opened.io/resources/2165320","sort_key":null},
+      {"standard_idents":["3.MD.5.b","3.MD.5","3.MD.5.a","3.MD.6"],"grade_idents":["3"],"grades_range":"3","group_id":null,"grade_group_ids":[46],"featured":false,"embeddable":false,"area_ids":[1],"area_titles":["Mathematics"],"subject_ids":[6,63],"subject_titles":["Measurement \u0026 Data","Mathematics"],"resource_type":"assessment","id":1068556,"state":"public","thumb":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","thumbnails":{"mini":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","small":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","medium":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","large":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png"},"contribution_name":"Michelle Moody","publisher":"Michelle Moody","owner_id":6584,"share_url":"https://www.opened.io/resources/1068556","rating":3,"is_allowed":true,"is_locked":false,"title":"Area","description":null,"is_premium":false,"duration":null,"my_rating":null,"safe_url":"https://www.opened.io/resources/1068556","sort_key":null},
+      {"standard_idents":["7.G.6"],"grade_idents":["7","8"],"grades_range":"7-8","group_id":null,"grade_group_ids":[47,46],"featured":true,"embeddable":false,"area_ids":[1],"area_titles":["Mathematics"],"subject_ids":[1,63],"subject_titles":["Geometry","Mathematics"],"resource_type":"assessment","id":1068772,"state":"public","thumb":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","thumbnails":{"mini":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","small":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","medium":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","large":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png"},"contribution_name":"Kellie Zimmer","publisher":"Kellie Zimmer","owner_id":6610,"share_url":"https://www.opened.io/resources/1068772","rating":5,"is_allowed":true,"is_locked":false,"title":"Area, Volume, Surface Area Real-World","description":null,"is_premium":false,"duration":null,"my_rating":null,"safe_url":"https://www.opened.io/resources/1068772","sort_key":null},
+      {"standard_idents":["7.G.4"],"grade_idents":["6","7","8"],"grades_range":"6-8","group_id":null,"grade_group_ids":[47],"featured":true,"embeddable":false,"area_ids":[1],"area_titles":["Mathematics"],"subject_ids":[1,63],"subject_titles":["Geometry","Mathematics"],"resource_type":"assessment","id":1068727,"state":"public","thumb":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","thumbnails":{"mini":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","small":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","medium":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","large":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png"},"contribution_name":"Kellie Zimmer","publisher":"Kellie Zimmer","owner_id":6610,"share_url":"https://www.opened.io/resources/1068727","rating":5,"is_allowed":true,"is_locked":false,"title":"Circles, Area \u0026 Circumference","description":null,"is_premium":false,"duration":null,"my_rating":null,"safe_url":"https://www.opened.io/resources/1068727","sort_key":null},
+      {"standard_idents":["6.G.3"],"grade_idents":["6","7"],"grades_range":"6-7","group_id":null,"grade_group_ids":[47],"featured":true,"embeddable":false,"area_ids":[1],"area_titles":["Mathematics"],"subject_ids":[1,63],"subject_titles":["Geometry","Mathematics"],"resource_type":"assessment","id":1068746,"state":"public","thumb":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","thumbnails":{"mini":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","small":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","medium":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png","large":"https://d82yecxzdbhgs.cloudfront.net/images/resource_types/logo.png"},"contribution_name":"Kellie Zimmer","publisher":"Kellie Zimmer","owner_id":6610,"share_url":"https://www.opened.io/resources/1068746","rating":5,"is_allowed":true,"is_locked":false,"title":"Coordinate Plane Areas","description":null,"is_premium":false,"duration":null,"my_rating":null,"safe_url":"https://www.opened.io/resources/1068746","sort_key":null}
+    ]
 }
 ```
 
