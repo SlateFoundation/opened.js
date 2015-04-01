@@ -29,9 +29,9 @@ window.OpenEd.api.init(
 
 ## Querying Resources from the OpenEd Resource Library
 
-*[init](#initinitoptions-callback)*  - this initialize the JS library
+[**init**  - this initialize the JS library](#initinitoptions-callback)
 
-```
+```javascript
 window.OpenEd.api.init({
   client_id: 'your client id',
   redirect_uri: 'https://your.site.com/callback.html'
@@ -42,14 +42,16 @@ window.OpenEd.api.init({
 
 ```
 
-*[login](#logincallback)*  - login with the user identity via OpenEd OAuth provider
+[**login** - login with the user identity via OpenEd OAuth provider](#logincallback)
 
-```
+```javascript
 window.OpenEd.api.login(function () {
   //your successfully signin here
   
 });
 ```
+
+**[request - search for resources]
 
 (example resources.json call for search) (link to full resources.json search doc in this document)
 
