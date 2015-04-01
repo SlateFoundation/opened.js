@@ -89,7 +89,7 @@ window.OpenEd.api.logout(function () {
 });
 ```
 
-A longer example of this is [here](https://github.com/openedinc/opened-oauth.js/index.html). 
+A longer example of this is [here](./index.html). 
  
 
 ## JavaScript Method Reference
