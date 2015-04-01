@@ -25,12 +25,31 @@ window.OpenEd.api.init(
 - Run ``` window.OpenEd.api.login() ```. It will open a popup with OpenEd OAuth flow. 
 - After success you have your token available via ``` window.OpenEd.api.getToken() ```
 - Now you can access OpenEd API endpoints via ``` window.OpenEd.api.request() ```
-- 
+- And do logout via ``` window.OpenEd.api.logout() ```
+
 ## Querying Resources from the OpenEd Resource Library
 
-(init)  # this initialize the JS library (link to init method reference)
+*[init](#initinitoptions-callback)*  - this initialize the JS library
 
-(login)  # login with the user identity (link)
+```
+window.OpenEd.api.init({
+  client_id: 'your client id',
+  redirect_uri: 'https://your.site.com/callback.html'
+}, function () {
+  //Api init successfully here
+  console.log('OpenEd JS API is ready to use!');
+});
+
+```
+
+*[login](#logincallback)*  - login with the user identity via OpenEd OAuth provider
+
+```
+window.OpenEd.api.login(function () {
+  //your successfully signin here
+  
+});
+```
 
 (example resources.json call for search) (link to full resources.json search doc in this document)
 
