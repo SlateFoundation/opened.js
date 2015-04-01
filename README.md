@@ -52,7 +52,9 @@ window.OpenEd.api.login(function () {
 ```
 
 **request** - do REST API call like search for resources (details [here](#requestapiname-data-callback-errorcallback))
+
 example call can search based on standard, keyword, and resource_types (e.g. all A.APR.1 polynomial videos OR assessments for 9th grade)
+
 ```javascript
 search_params = {
   standard: 'A.APR.1',
