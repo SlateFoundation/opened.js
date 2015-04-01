@@ -26,7 +26,7 @@ window.OpenEd.api.init(
 - After success you have your token available via ``` window.OpenEd.api.getToken() ```
 - Now you can access OpenEd API endpoints via ``` window.OpenEd.api.request() ```
  
-## Methods
+## JavaScript Method Reference
 ### init(initOptions, callback)
 
 Initializes the OpenEd API. You should pass your client id and redirect_uri.
@@ -124,8 +124,8 @@ window.OpenEd.api.verifyToken(function (err) {
 ```
 
 
-## API endpoints
-Full Api documentation can be found [here](http://docs.opened.apiary.io/)
+## Rest API endpoints
+These are some of the more important REST API calls.  Full documentation of the REST API can be found [here](http://docs.opened.apiary.io/).  Note however that resource query must be performed via our JavaScript API
  
 ### /users/me.json 
  
