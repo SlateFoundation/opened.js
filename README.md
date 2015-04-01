@@ -29,7 +29,7 @@ window.OpenEd.api.init(
 
 ## Querying Resources from the OpenEd Resource Library
 
-**init**  - this initialize the JS library (details [here](#initinitoptions-callback))
+**init**  - this initialize the JS library (details [here](https://github.com/openedinc/opened-oauth.js#initinitoptions-callback))
 
 ```javascript
 window.OpenEd.api.init({
@@ -42,7 +42,7 @@ window.OpenEd.api.init({
 
 ```
 
-**login** - login with the user identity via OpenEd OAuth provider (details [here](#logincallback))
+**login** - login with the user identity via OpenEd OAuth provider (details [here](https://github.com/openedinc/opened-oauth.js#logincallback))
 
 ```javascript
 window.OpenEd.api.login(function () {
@@ -51,7 +51,7 @@ window.OpenEd.api.login(function () {
 });
 ```
 
-**request** - do REST API call like search for resources (details [here](#requestapiname-data-callback-errorcallback))
+**request** - do REST API call like search for resources (details [here](https://github.com/openedinc/opened-oauth.js#requestapiname-data-callback-errorcallback))
 
 example call can search based on standard, keyword, and resource_types (e.g. all A.APR.1 polynomial videos OR assessments for 9th grade)
 
@@ -80,7 +80,7 @@ window.OpenEd.api.request('/resources.json', search_params, function (data) {
 });
 ```
 
-**logout** - revoke OAuth token (details [here](#logoutcallback))
+**logout** - revoke OAuth token (details [here](https://github.com/openedinc/opened-oauth.js#logoutcallback))
 
 ```javascript
 window.OpenEd.api.logout(function () {
@@ -89,7 +89,7 @@ window.OpenEd.api.logout(function () {
 });
 ```
 
-A longer example of this is [here](./index.html). 
+A longer example of this is [here](https://github.com/openedinc/opened-oauth.js/index.html). 
  
 
 ## JavaScript Method Reference
