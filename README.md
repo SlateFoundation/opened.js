@@ -25,6 +25,20 @@ window.OpenEd.api.init(
 - Run ``` window.OpenEd.api.login() ```. It will open a popup with OpenEd OAuth flow. 
 - After success you have your token available via ``` window.OpenEd.api.getToken() ```
 - Now you can access OpenEd API endpoints via ``` window.OpenEd.api.request() ```
+- 
+## Querying Resources from the OpenEd Resource Library
+
+(init)  # this initialize the JS library (link to init method reference)
+
+(login)  # login with the user identity (link)
+
+(example resources.json call for search) (link to full resources.json search doc in this document)
+
+example call can search based on standard, keyword, and resource_type (e.g. all A.APR.1 polynomial videos for 9th grade)
+
+(handling the result)
+
+A longer example of this is [here](link to the index.html). 
  
 ## JavaScript Method Reference
 ### init(initOptions, callback)
