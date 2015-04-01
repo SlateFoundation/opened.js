@@ -1,4 +1,4 @@
-# opened-oauth.js
+# OpenEd JavaScript API
 
 This JavaScript library lets you integrate with the OpenEd resource library from your web application pages.  This JavaScript library focuses on the process of using OpenEd as an OAuth provider to login to OpenEd and then perform actions such as queries of the resource library. 
 
