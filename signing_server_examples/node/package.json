@@ -1,0 +1,13 @@
+{
+  "name": "Signing",
+  "title": "Sample HTTP server to showcase how to sign requests to be consumed by OpeneEd silent login API.",
+  "version": "0.0.1",
+  "private": true,
+  "author": "",
+  "dependencies": {
+    "body-parser": "~1.4.3",
+    "cors": "~2.5.3",
+    "ejs": "~0.7.1",
+    "express": "~4.6.1"
+  }
+}

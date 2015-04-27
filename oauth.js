@@ -45,7 +45,7 @@
         });
       }
     },
-    
+
     init: function (options, callback) {
       if (!options || !options.client_id) {
         throw new Error('Bad init options.');
@@ -66,6 +66,20 @@
 
     runOnInit: function () {
       root.OpenEd.oninit && root.OpenEd.oninit()
+    },
+
+    silentLogin: function(signedRequest, callback, errorCallback) {
+      var self = this;
+      self.xhr({
+        type: 'POST',
+        url: self.apiHost + '/oauth/silent_login',
+        raw_data: signedRequest,
+        success: function(data){
+          self.saveToken(data);
+          callback && callback();
+        },
+        error: errorCallback
+      }, errorCallback);
     },
 
     login: function (callback) {
@@ -91,11 +105,11 @@
           url: self.apiHost + '/oauth/revoke',
           data: {token: token},
           success: function () {
-            self.resetToken();  
+            self.resetToken();
             callback && callback();
           },
           error: function () {
-            self.resetToken();  
+            self.resetToken();
             callback && callback();
           },
           headers: {
@@ -103,13 +117,13 @@
           }
         });
       } else {
-        self.resetToken();  
+        self.resetToken();
         callback && callback();
       }
     },
 
     resetToken: function () {
-      localStorage.removeItem(this.tokenPrefix + '.access_token');  
+      localStorage.removeItem(this.tokenPrefix + '.access_token');
       this.trigger('auth.userSignedOut');
     },
 
@@ -153,17 +167,27 @@
         }
       }
       xmlhttp.open(type, url, true);
+
       if (type === 'POST') {
-        xmlhttp.setRequestHeader('Content-Type', 'application/json');
+        if (options.raw_data){
+          xmlhttp.setRequestHeader('Content-Type', 'text/plain');
+        }else{
+          xmlhttp.setRequestHeader('Content-Type', 'application/json');
+        }
       }
+
       if (options.headers) {
         for (var name in options.headers) {
           xmlhttp.setRequestHeader(name, options.headers[name]);
         }
-        
+
       }
       if (type !== 'GET') {
-        xmlhttp.send(this.prepareReqData(options.data));
+        if(options.raw_data){
+          xmlhttp.send(options.raw_data);
+        }else{
+          xmlhttp.send(this.prepareReqData(options.data));
+        }
       } else {
         xmlhttp.send();
       }
@@ -240,7 +264,7 @@
         }
         self._lastCallback && self._lastCallback(err);
       })
-      
+
     },
 
     parseToken: function (token) {
@@ -257,7 +281,7 @@
     }
 
   };
-  
+
   root.OpenEd.api.runOnInit();
-    
+
 })(this);
