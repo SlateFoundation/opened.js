@@ -2,9 +2,7 @@
 
 The method described here allows you to integrate with OpenEd resource library from your web application using the secure signed server request. This way, user is not required to enter his credentials on the OpenEd Sign-in popup windows, instead allowing a user with an already established identity to pass that identity to OpenEd using the secure server request signed with the private key provided by OpenEd. 
 
-## Getting Started
-
-### Generating Signed Server Request
+## Generating Signed Server Request
 
 Once your web application has completed the authentication process of a certain user and needs to grant that user access to the OpenEd resource library, it needs to create a secure signed server request and pass it to the OpenEd for validation. This request needs to be constructed on your web server application - in order not to expose the secret private key provided by OpenEd. This signed request needs to be generated uniquely per user (thus, embedding the username). In the example below, username is passed from the browser, however we recommend you to implement passing the username internally on the server (to hide the full process from the client):
 
@@ -124,6 +122,8 @@ var perform_resources_search = function() {
 You can access the complete code examples for the following server implementations:
 
   - [Sinatra Ruby](signing_server_examples/ruby)
-  - Node.js
+  - [Node.js](signing_server_examples/node)
 
+## Licensing and usage
 
+Before your app attempts to authenticate the user and pass his identity to OpenEd - it is advised that to warn the user of the upcoming authentication routine on a 3rd party application (i.e. OpenEd). Also, it is advised for your app to post a link to the OpenEd's License Terms.
