@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Testapp</title>
+    <title>Login and Query</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
@@ -11,11 +11,21 @@
     <script src="oauth.js"></script>
     <script>
       window.OpenEd.api.init({
-        client_id: "<%= client_id %>"
+        client_id: "<%= @client_id %>"
       });
 
-      window.OpenEd.api.silentLogin('<%= signed_request %>', function(){
-        window.OpenEd.api.request("/resources", null, function(data){
+      window.OpenEd.api.silentLogin('<%= @signed_request %>', function(){
+        perform_resources_search();
+      }, function(data){
+        console.error(data.error);
+      });
+
+      search_params = {
+        descriptive: 'quadrilateral shapes',
+        grade: '9'
+      }
+      var perform_resources_search = function() {
+        window.OpenEd.api.request("/resources", search_params, function(data){
           var resourcesList = document.getElementById('resources_list');
           data.resources.forEach(function(resource){
             var li = document.createElement('li');
@@ -25,10 +35,7 @@
             resourcesList.appendChild(li);
           });
         });
-
-      }, function(data){
-        console.error(data.error);
-      });
+      };
     </script>
 
     <ul id="resources_list">

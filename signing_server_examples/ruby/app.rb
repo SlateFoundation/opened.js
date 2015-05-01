@@ -44,5 +44,5 @@ post '/generate_signed_request' do
   @signed_request = "#{encoded_signature}.#{encoded_envelope}"
   @client_id = CLIENT_ID
 
-  erb :test
+  erb :login_and_query
 end
