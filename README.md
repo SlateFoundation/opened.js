@@ -2,20 +2,20 @@
 
 This JavaScript library lets you integrate with the OpenEd resource library from your web application. It provides the client with two ways of authenticating the user with the OpenEd system:
 
-  - via Signed Server Request (using the private secret token provided you by the OpenEd)
-  - Client-to-client OAuth , allowing user to interact directly with the OpenEd sign-in dialog.
+  - via Signed Server Request (using the private secret token provided to you by OpenEd)
+  - Client-to-client OAuth, allowing user to interact directly with the OpenEd sign-in dialog.
 
-We recommend using the Signed Server Request method, which is more secure and eliminates the need to interact with the OpenEd UI, instead allowing to pass the identity of the user authenticated by your web app directly into OpenEd.
+We recommend using the Signed Server Request method, which eliminates the need to interact with the OpenEd OAuth dialog. Instead it allows you to pass the identity of the user authenticated by your web app directly into OpenEd.
 
-In the following sections - we will describe how to use Signed Server Request method. For those, who is interested in using the Client-to-client approach - it is described [here](CLIENT-TO-CLIENT.md).
+In the following sections, we will describe how to use Signed Server Request method. For those who are interested in using the Client-to-client approach, it is described [here](CLIENT-TO-CLIENT.md).
 
 # OpenEd JavaScript API - Signed Server Request method
 
-The method described here allows you to integrate with OpenEd resource library from your web application using the secure signed server request. This way, user is not required to enter his credentials on the OpenEd Sign-in popup windows, instead allowing a user with an already established identity to pass that identity to OpenEd using the secure server request signed with the private key provided by OpenEd. 
+This method allows you to integrate with OpenEd resource library from your web application using the secure signed server request. This way, user is not required to enter his credentials on the OpenEd Sign-in popup windows, instead allowing a user with an already established identity to pass that identity to OpenEd using the secure server request signed with the private key provided to you by OpenEd. 
 
 ## Generating Signed Server Request
 
-Once your web application has completed the authentication process of a certain user and needs to grant that user access to the OpenEd resource library, it needs to create a secure signed server request and pass it to the OpenEd for validation. This request needs to be constructed on your web server application - in order not to expose the secret private key provided by OpenEd. This signed request needs to be generated uniquely per user (thus, embedding the username). In the example below, username is passed from the browser, however we recommend you to implement passing the username internally on the server (to hide the full process from the client):
+Once your web application has completed the authentication process of a certain user and needs to grant that user access to the OpenEd resource library, it needs to create a secure signed server request and pass it to the OpenEd API for validation. This request needs to be constructed on your web server application - in order not to expose the secret private key provided by OpenEd. This signed request needs to be generated uniquely per user (thus, embedding the username). In the example below, we generate a signed request for a username provided by a form. In a real application, the user would be provided by the browser's session (cookie) after the user is logged in.
 
 ```html
 <!DOCTYPE html>
@@ -23,20 +23,20 @@ Once your web application has completed the authentication process of a certain 
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Testapp</title>
+    <title>OpenEd Signed Request Example</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
     <form action="/generate_signed_request" method="POST">
-      <input type="text" name="username">
+      <input type="text" name="username" value="test-user">
       <input type="submit" value="Submit">
     </form>
   </body>
 </html>
 ```
 
-Example implementation of generate_signed_request routine is provided below (for Sinatra server written in Ruby):
+An example ruby implementation of generate_signed_request routine is provided below:
 
 ```ruby
 require 'base64'
@@ -82,13 +82,13 @@ end
 
 ```
 
-At the end of the signed request generation, your server needs to pass it back to the browser. In the above example, it is done by embedding the generated signed server request into the page that is rendered as a result at the end of the method. After that, the signed secure request can be used to login your authenticated user to the OpenEd system. 
+In the above example, we return the generated signed server request embedded into the [page that is rendered](signing_server_examples/ruby/views/login_and_query.erb). After that, the signed secure request can be used to login your authenticated user to the OpenEd system. 
 
-## Using the signed server request to authenticate the user with OpenEd.
+## Using the signed server request to authenticate users with OpenEd
 
-Once signed server request is obtained, it can be used to authenticate your user with the OpenEd system. It is performed in 2 steps:
+Once signed server request is obtained, it can be used to authenticate your user with the OpenEd API. It is performed in 2 steps:
 
-### Initializing the internal Oauth.js routines with your public key on the browser by calling:
+### Initializing the internal `oauth.js` routines with your public key on the browser by calling:
 
 ```javascript
 window.OpenEd.api.init({
@@ -96,9 +96,12 @@ window.OpenEd.api.init({
 });
 ```
 
-###  Completing the login process by passing the signed server request to the OpenEd system:
+###  Completing the login process by passing the signed server request to the OpenEd API:
 ```javascript
-window.OpenEd.api.silentLogin('YOUR_GENERATED_SIGNED_REQUEST_FOR_THE_USER', function(){
+// The signed request we received from posting to /generate_signed_request
+var signedRequest = 'YOUR_GENERATED_SIGNED_REQUEST_FOR_THE_USER';
+
+window.OpenEd.api.silentLogin(signedRequest, function(){
   // you're authenticated now, do something useful
   perform_resources_search();
 }, function(data){
@@ -190,4 +193,4 @@ You can access the complete code examples for the following server implementatio
 
 ## Licensing and usage
 
-Before your app attempts to authenticate the user and pass his identity to OpenEd - it is advised to warn the user of the upcoming authentication routine on a 3rd party application (i.e. OpenEd). Also, it is advised for your app to post a link to the OpenEd's License Terms.
+Before your app attempts to authenticate the user and pass an identity to OpenEd - we recommend you notify the user an account will be created automatically with OpenEd. Also, we recommend this notification has a link to the OpenEd [Terms of Use](http://about.opened.io/terms-of-service/).
