@@ -89,8 +89,6 @@ window.OpenEd.api.init({
 ```javascript
 window.OpenEd.api.silentLogin('YOUR_GENERATED_SIGNED_REQUEST_FOR_THE_USER', function(){
   // you're authenticated now, do something useful
-  search_params = {
-  };
   perform_resources_search();
 }, function(data){
   // something happenned, log the error
