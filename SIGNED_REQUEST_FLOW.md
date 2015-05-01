@@ -83,7 +83,7 @@ Once signed server request is obtained, it can be used to authenticate your user
 window.OpenEd.api.init({
   client_id: 'YOUR_PUBLIC_CLIENT_ID_FROM_OPENED'
 });
-```javascript
+```
 
 
 - Obtaining OAuth Access Token from OpenEd using the signed server request:
