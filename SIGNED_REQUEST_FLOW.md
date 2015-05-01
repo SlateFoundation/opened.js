@@ -1,10 +1,12 @@
 # OpenEd JavaScript API - Signed Server Request flow
 
-The method described here allows you to intergrate with OpenEd resource library from your web application using the secure signed request. This way, user is not required to enter his credentials on the OpenEd Sign-in popup windows, instead allowing a user to pass his already established identity to OpenEd using the secure server request signed with the private key provided by OpenEd. 
+The method described here allows you to integrate with OpenEd resource library from your web application using the secure signed server request. This way, user is not required to enter his credentials on the OpenEd Sign-in popup windows, instead allowing a user with an already established identity to pass that identity to OpenEd using the secure server request signed with the private key provided by OpenEd. 
 
 ## Getting Started
 
-Once your web application has completed the authentication process, it needs to create a secure signed server request. This request needs to be constructed on your web server application , in order not to expose the secret private key provided by OpenEd. This signed request needs to be generated unique per user (thus, embedding the username). In example, below username is passed from the browser, however we recommend you to implement passing the username internally on the server (to hide the full process from the client):
+### Generating Signed Server Request
+
+Once your web application has completed the authentication process of a certain user and needs to grant that user access to the OpenEd resource library, it needs to create a secure signed server request and pass it to the OpenEd for validation. This request needs to be constructed on your web server application - in order not to expose the secret private key provided by OpenEd. This signed request needs to be generated uniquely per user (thus, embedding the username). In the example below, username is passed from the browser, however we recommend you to implement passing the username internally on the server (to hide the full process from the client):
 
 ```html
 <!DOCTYPE html>
@@ -71,13 +73,13 @@ end
 
 ```
 
-At the end of the signed request generation, your server needs to pass it back to the browser. For example, it can be done by embedding it to the page rendered next. After that, the signed secure request can be used to login your authenticated user with the OpenEd resource library app.
+At the end of the signed request generation, your server needs to pass it back to the browser. In the above example, it is done by embedding the generated signed server request into the page that is rendered as a result at the end of the method. After that, the signed secure request can be used to login your authenticated user to the OpenEd system. 
 
 ## Using the signed server request to authenticate the user with OpenEd.
 
 Once signed server request is obtained, it can be used to authenticate your user with the OpenEd system. It is performed in 2 steps:
 
-- Initializing the internal Oauth.js routines with your public key on the browser by calling:
+### Initializing the internal Oauth.js routines with your public key on the browser by calling:
 
 ```javascript
 window.OpenEd.api.init({
@@ -85,10 +87,9 @@ window.OpenEd.api.init({
 });
 ```
 
-
-- Obtaining OAuth Access Token from OpenEd using the signed server request:
+###  Completing the login process by passing the signed server request to the OpenEd system:
 ```javascript
-window.OpenEd.api.silentLogin('SIGNED_REQUEST_STRING_HERE', function(){
+window.OpenEd.api.silentLogin('YOUR_GENERATED_SIGNED_REQUEST_FOR_THE_USER', function(){
   // you're authenticated now, do something useful
   search_params = {
   };
@@ -119,3 +120,10 @@ var perform_resources_search = function() {
   });
 };
 ```
+
+You can access the complete code examples for the following server implementations:
+
+  - Sinatra Ruby
+  - Node.js
+
+ 
