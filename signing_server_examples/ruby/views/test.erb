@@ -15,10 +15,17 @@
       });
 
       window.OpenEd.api.silentLogin('<%= @signed_request %>', function(){
-        search_params = {
-          descriptive: 'quadrilateral shapes',
-          grade: '9'
-        };
+        perform_resources_search();
+      }, function(data){
+        console.error(data.error);
+      });
+
+
+      search_params = {
+        descriptive: 'quadrilateral shapes',
+        grade: '9'
+      }
+      var perform_resources_search = function() {
         window.OpenEd.api.request("/resources", search_params, function(data){
           var resourcesList = document.getElementById('resources_list');
           data.resources.forEach(function(resource){
@@ -29,10 +36,7 @@
             resourcesList.appendChild(li);
           });
         });
-
-      }, function(data){
-        console.error(data.error);
-      });
+      };
     </script>
 
     <ul id="resources_list">
