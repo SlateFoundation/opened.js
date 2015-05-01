@@ -98,6 +98,8 @@ window.OpenEd.api.silentLogin('YOUR_GENERATED_SIGNED_REQUEST_FOR_THE_USER', func
 });
 ```
 
+### Using the REST API after successful login
+
 Once authentication has been completed, your web app can use the OpenEd REST API to access the resources library. For example:
 
 ```javascript
@@ -126,4 +128,4 @@ You can access the complete code examples for the following server implementatio
 
 ## Licensing and usage
 
-Before your app attempts to authenticate the user and pass his identity to OpenEd - it is advised that to warn the user of the upcoming authentication routine on a 3rd party application (i.e. OpenEd). Also, it is advised for your app to post a link to the OpenEd's License Terms.
+Before your app attempts to authenticate the user and pass his identity to OpenEd - it is advised to warn the user of the upcoming authentication routine on a 3rd party application (i.e. OpenEd). Also, it is advised for your app to post a link to the OpenEd's License Terms.
