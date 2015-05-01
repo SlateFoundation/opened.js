@@ -2,7 +2,7 @@
 
 This JavaScript library lets you integrate with the OpenEd resource library from your web application. It provides the client with two ways of authenticating the user with the OpenEd system:
 
-  - via Signed Server Request (using the private secret token provided you by OpenEd)
+  - via Signed Server Request (using the private secret token provided you by the OpenEd)
   - Client-to-client OAuth , allowing user to interact directly with the OpenEd sign-in dialog.
 
 We recommend using the Signed Server Request method, which is more secure and eliminates the need to interact with the OpenEd UI, instead allowing to pass the identity of the user authenticated by your web app directly into OpenEd.
