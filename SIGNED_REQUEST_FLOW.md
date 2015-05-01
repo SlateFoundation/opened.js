@@ -121,6 +121,8 @@ var perform_resources_search = function() {
 };
 ```
 
+## Complete code samples
+
 You can access the complete code examples for the following server implementations:
 
   - [Sinatra Ruby](signing_server_examples/ruby)
