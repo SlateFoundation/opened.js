@@ -8,8 +8,8 @@ require 'sinatra/cross_origin'
 enable :cross_origin
 set :port, 1337
 
-APP_SECRET = '7e728afdf46092c3d9c83ae2ea712e80d6dcc13e4336af1343541231856bec64'
-CLIENT_ID = 'd5469f8af59cb6f81eb63f5aa3debc3c509f0597690d3ced227d1bf9348fba7b'
+APP_SECRET = 'THE.APP.SECRET.SHARED.BETWEEN.YOU.AND.OPENEDIO'
+CLIENT_ID = 'YOUR.APP.ID.GRANTED.BY.OPENEDIO'
 
 def base64_url_encode(str)
   Base64.encode64(str).tr('+/', '-_').gsub(/\s/, '').gsub(/=+\z/, '')
