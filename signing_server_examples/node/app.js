@@ -43,7 +43,7 @@ app.use(express.static('public'));
 app.use(express.static('../../'));
 
 app.post('/generate_signed_request', function (request, response) {
-  response.render('test', {
+  response.render('login_and_query', {
     signed_request: generateSignedRequest(request.body.username, CLIENT_ID),
     client_id: CLIENT_ID
   });

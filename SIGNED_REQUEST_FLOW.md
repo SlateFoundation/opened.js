@@ -123,7 +123,7 @@ var perform_resources_search = function() {
 
 You can access the complete code examples for the following server implementations:
 
-  - Sinatra Ruby
+  - [Sinatra Ruby](signing_server_examples/ruby)
   - Node.js
 
- 
+
