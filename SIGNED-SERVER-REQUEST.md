@@ -81,7 +81,7 @@ Once signed server request is obtained, it can be used to authenticate your user
 
 ```javascript
 window.OpenEd.api.init({
-  client_id: 'YOUR_PUBLIC_CLIENT_ID_FROM_OPENED'
+  client_id: 'YOUR.APP.ID.GRANTED.BY.OPENEDIO'
 });
 ```
 

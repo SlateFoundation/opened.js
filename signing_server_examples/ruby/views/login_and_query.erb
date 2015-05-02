@@ -21,7 +21,8 @@
       });
 
       search_params = {
-        standard: 'A.APR.1'
+        standard: 'A.APR.1',
+        limit: 5
       }
       var perform_resources_search = function() {
         window.OpenEd.api.request("/resources", search_params, function(data){
