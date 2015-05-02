@@ -25,8 +25,8 @@ get '/' do
   send_file File.join('public/index.html')
 end
 
-get '/oauth.js' do
-  send_file File.join('../../oauth.js')
+get '/opened-api.js' do
+  send_file File.join('../../opened-api.js')
 end
 
 post '/generate_signed_request' do
