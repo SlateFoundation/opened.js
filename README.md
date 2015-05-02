@@ -2,16 +2,16 @@
 
 This JavaScript library lets you integrate with the OpenEd resource library from your web application. It provides the client with two ways of authenticating the user with the OpenEd system:
 
-  - via Signed Server Request (using the private secret token provided to you by OpenEd)
-  - Client-to-client OAuth, allowing user to interact directly with the OpenEd sign-in dialog.
+  - Create a user on OpenEd and login via a Signed Server Request 
+  - Client-to-client OAuth, allowing user to interact directly with the OpenEd-provided sign-in dialog.
 
-We recommend using the Signed Server Request method, which eliminates the need to interact with the OpenEd OAuth dialog. Instead it allows you to pass the identity of the user authenticated by your web app directly into OpenEd.
+If you choose to create an OpenEd user, it allows you to pass the identity of the user authenticated by your web app directly into OpenEd.
 
 In the following sections, we will describe how to use Signed Server Request method. For those who are interested in using the Client-to-client approach, it is described [here](CLIENT-TO-CLIENT.md).
 
 # OpenEd JavaScript API - Signed Server Request method
 
-This method allows you to integrate with OpenEd resource library from your web application using the secure signed server request. This way, user is not required to enter his credentials on the OpenEd Sign-in popup windows, instead allowing a user with an already established identity to pass that identity to OpenEd using the secure server request signed with the private key provided to you by OpenEd. 
+This method allows you to integrate with OpenEd resource library from your web application using a secure signed server request. This way, user is not required to enter his credentials on the OpenEd Sign-in popup windows, instead allowing a user with an already established identity to pass that identity to OpenEd using the secure server request signed with the private key provided to you by OpenEd. 
 
 ## Generating Signed Server Request
 
