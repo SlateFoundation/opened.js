@@ -195,6 +195,7 @@
 
     request: function (api, data, callback, errorCallback) {
       var self = this;
+      data.access_token = self.getToken();
       this.xhr({
         url: this.apiHost + api,
         data: data,
