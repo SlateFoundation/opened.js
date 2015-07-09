@@ -10,7 +10,7 @@
 
     apiHost: 'https://api.opened.io',
 
-    openedHost: 'https://opened.io',
+    openedHost: 'https://www.opened.io',
 
     _events: {},
 
