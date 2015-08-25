@@ -153,7 +153,7 @@
             options.error && options.error(error);
           }
         }
-      }
+      };
       var type = options.type || 'GET';
       var url = options.url;
       if (type === 'GET') {
