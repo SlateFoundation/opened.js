@@ -236,9 +236,9 @@
       return now.getTime() < tokenDate.getTime();
     },
 
-    expireDate: function (expairsIn) {
+    expireDate: function (expiresIn) {
       var date = this.now();
-      date.setTime(date.getTime() + (parseInt(expairsIn) * 1000, 10));
+      date.setTime(date.getTime() + (parseInt(expiresIn) * 1000, 10));
       return date;
     },
 
