@@ -71,10 +71,10 @@
         raw_data: signedRequest,
         success: function(data){
           self.saveToken(data);
-          callback && callback();
+          (typeof callback !== 'function') || callback();
         },
         error: errorCallback
-      }, errorCallback);
+      });
     },
 
     login: function (callback) {
