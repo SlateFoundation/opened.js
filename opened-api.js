@@ -231,14 +231,14 @@
     },
 
     checkTokenDate: function () {
-      var tokenDate = new Date(parseInt(localStorage.getItem(this.tokenPrefix + '.expires_in')));
+      var tokenDate = new Date(parseInt(localStorage.getItem(this.tokenPrefix + '.expires_in'), 10));
       var now = this.now();
       return now.getTime() < tokenDate.getTime();
     },
 
     expireDate: function (expairsIn) {
       var date = this.now();
-      date.setTime(date.getTime() + (parseInt(expairsIn) * 1000) );
+      date.setTime(date.getTime() + (parseInt(expairsIn) * 1000, 10));
       return date;
     },
 
