@@ -22,12 +22,12 @@
     },
 
     off: function (eventName, callback) {
-      if (eventName && callback) {
-        if (this._events[eventName]) {
-          var callbackIndex = this._events[eventName].indexOf(callback);
-          if (callbackIndex >= 0) {
-            this._events[eventName].slice(callbackIndex, 1);
-          }
+      var events = this._events[eventName];
+
+      if (events && typeof callback === 'function') {
+        var callbackIndex = events.indexOf(callback);
+        if (callbackIndex !== -1) {
+          events.slice(callbackIndex, 1);
         }
       }
     },
