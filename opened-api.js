@@ -22,26 +22,23 @@
     },
 
     off: function (eventName, callback) {
-      var events = this._events[eventName];
+      var eventsArr = this._events[eventName];
 
-      if (events && typeof callback === 'function') {
-        var callbackIndex = events.indexOf(callback);
+      if (eventsArr && typeof callback === 'function') {
+        var callbackIndex = eventsArr.indexOf(callback);
         if (callbackIndex !== -1) {
-          events.slice(callbackIndex, 1);
+          eventsArr.slice(callbackIndex, 1);
         }
       }
     },
 
-    trigger: function () {
-      var args = Array.prototype.slice.call(arguments);
-      var eventName = args.slice(0)[0];
-      var eventsArr = this._events[eventName];
-      var data = args.slice(1);
-      if (eventsArr && eventsArr.length) {
+    trigger: function (eventName) {
+      var data = Array.prototype.slice.call(arguments).shift(),
+          eventsArr = this._events[eventName] || [];
+
         eventsArr.forEach(function (callback) {
           callback.apply(null, data);
         });
-      }
     },
 
     init: function (options, callback) {
