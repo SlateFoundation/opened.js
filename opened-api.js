@@ -52,10 +52,10 @@
         var self = this;
         this.checkLoginStatus(function () {
           self.trigger('auth.userLoggedIn');
-          callback && callback();
+          (typeof callback !== 'function') || callback();
         });
       } else {
-        callback && callback();
+        (typeof callback !== 'function') || callback();
       }
     },
 
