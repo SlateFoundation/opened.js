@@ -60,7 +60,7 @@
     },
 
     runOnInit: function () {
-      root.OpenEd.oninit && root.OpenEd.oninit()
+      (typeof root.OpenEd.oninit !== 'function') || root.OpenEd.oninit()
     },
 
     silentLogin: function(signedRequest, callback, errorCallback) {
