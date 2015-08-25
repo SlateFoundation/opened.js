@@ -15,10 +15,8 @@
     _events: {},
 
     on: function (eventName, callback) {
-      if (eventName && callback) {
-        if (!this._events[eventName]) {
-          this._events[eventName] = [];
-        }
+      if (eventName && typeof callback === 'function') {
+        this._events[eventName] = this._events[eventName] || [];
         this._events[eventName].push(callback);
       }
     },
