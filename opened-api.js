@@ -262,9 +262,9 @@
     parseToken: function (token) {
       var params = token.substr(1);
       var result = {};
-      params.split('&').forEach(function (paramPairStr) {
+      params.split('&').forEach(function(paramPairStr) {
         var paramPair = paramPairStr.split('=');
-        result[paramPair[0]] = paramPair[1];
+        result[decodeURIComponent(paramPair[0])] = decodeURIComponent(paramPair[1]);
       });
       if (result.expires_in) {
         result.expires_in = this.expireDate(result.expires_in).getTime();
