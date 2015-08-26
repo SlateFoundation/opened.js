@@ -262,8 +262,7 @@
           self.trigger('auth.userLoggedIn', token);
         }
         self._lastCallback && self._lastCallback(err);
-      })
-
+      });
     },
 
     parseToken: function (token) {
