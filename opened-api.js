@@ -228,18 +228,13 @@
 
     checkTokenDate: function () {
       var tokenDate = new Date(parseInt(localStorage.getItem(this.tokenPrefix + '.expires_in'), 10));
-      var now = this.now();
-      return now.getTime() < tokenDate.getTime();
+      return new Date() < tokenDate;
     },
 
     expireDate: function (expiresIn) {
-      var date = this.now();
+      var date = new Date();
       date.setTime(date.getTime() + (parseInt(expiresIn) * 1000, 10));
       return date;
-    },
-
-    now: function () {
-      return new Date();
     },
 
     checkLoginStatus: function (callback) {
