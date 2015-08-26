@@ -79,15 +79,14 @@
 
     login: function (callback) {
       this._lastCallback = callback;
-      var params = '?mode=implict';
-      var self = this;
-      ['client_id', 'redirect_uri'].forEach(function (paramName) {
-        var paramValue = self.options[paramName];
-        if (paramValue) {
-          params += '&' + paramName + '=' + paramValue
-        }
-      });
-      var popup = window.open(this.openedHost + '/oauth/authorize' + params, '_blank', 'width=500, height=300');
+
+      var params = {
+        mode: 'implicit',
+        client_id: this.options.client_id,
+        redirect_uri: this.options.redirect_uri
+      },
+      popup = window.open(this.openedHost + '/oauth/authorize' + this.objToQueryString(params), '_blank', 'width=500, height=300');
+
       popup.focus && popup.focus();
     },
 
@@ -141,9 +140,17 @@
     },
 
     objToQueryString: function (obj) {
-      return '?' + Object.keys(obj).map(function(key) {
-            return encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]);
-      }).join('&');
+      var result = [];
+
+      Object.keys(obj).forEach(function(key) {
+        var val = obj[key];
+
+        if (typeof val !== 'undefined' && val !== null) {
+          result.push(encodeURIComponent(key) + '=' + encodeURIComponent(val));
+        }
+      });
+
+      return (result.length === 0) ? '' : '?' + result.join('&');
     },
 
     xhr: function (options) {
