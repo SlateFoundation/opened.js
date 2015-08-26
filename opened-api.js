@@ -78,6 +78,10 @@
     },
 
     login: function (callback) {
+      if (typeof this.options === 'undefined') {
+        throw new Error("You must call init() before calling login()");
+      }
+
       this._lastCallback = callback;
 
       var params = {
@@ -87,7 +91,11 @@
       },
       popup = window.open(this.openedHost + '/oauth/authorize' + this.objToQueryString(params), '_blank', 'width=500, height=300');
 
-      popup.focus && popup.focus();
+      if (typeof popup === 'undefined') {
+        alert("The OpenEd login popup was blocked by your browser. Please allow popups on this site and try again.");
+      } else {
+        popup.focus();
+      }
     },
 
     logout: function (callback) {
@@ -150,6 +158,7 @@
         }
       });
 
+      debugger;
       return (result.length === 0) ? '' : '?' + result.join('&');
     },
 
