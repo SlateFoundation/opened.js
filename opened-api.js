@@ -33,7 +33,7 @@
     },
 
     trigger: function (eventName) {
-      var data = Array.prototype.slice.call(arguments).shift(),
+      var data = Array.prototype.slice.call(arguments).slice(1),
           eventsArr = this._events[eventName] || [];
 
         eventsArr.forEach(function (callback) {
