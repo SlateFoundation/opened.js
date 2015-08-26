@@ -1,9 +1,9 @@
 <?php
 
-require('OpenEd/SignedServerRequest.php');
+require_once('OpenEd/SignedServerRequest.php');
 
-define('OPENED_CLIENT_ID', '<< YOUR OPENED CLIENT ID HERE >>');
-define('OPENED_APP_SECRET', '<< YOUR OPENED APP SECRET HERE >>');
+define('OPENED_CLIENT_ID', '<< YOUR OPENED APP ID HERE >>');
+define('OPENED_CLIENT_SECRET', '<< YOUR OPENED CLIENT SECRET HERE >>');
 
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     http_redirect('index.html');
@@ -13,7 +13,7 @@ if (!isset($_POST['username'])) {
     die('Username is required');
 }
 
-$request = new OpenEd\SignedServerRequest(OPENED_CLIENT_ID, OPENED_APP_SECRET);
+$request = new OpenEd\SignedServerRequest(OPENED_CLIENT_ID, OPENED_CLIENT_SECRET);
 $signed_request = $request->generateSignedRequest($_POST['username']);
 
 ?>

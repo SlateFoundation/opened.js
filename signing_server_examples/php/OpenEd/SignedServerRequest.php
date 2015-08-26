@@ -5,12 +5,12 @@ namespace OpenEd;
 
 class SignedServerRequest
 {
-    private $app_secret;
     private $client_id;
+    private $client_secret;
 
-    public function __construct($app_secret, $client_id)
+    public function __construct($client_id, $client_secret)
     {
-        $this->app_secret = $app_secret;
+        $this->client_secret = $client_secret;
         $this->client_id = $client_id;
     }
 
@@ -39,7 +39,7 @@ class SignedServerRequest
             'algorithm' => 'HMAC-SHA256'
         ]));
 
-        $signature = self::base64UrlEncode(hash_hmac('SHA256', $envelope, $this->app_secret));
+        $signature = self::base64UrlEncode(hash_hmac('SHA256', $envelope, $this->client_secret));
 
         return "$signature.$envelope";
     }
