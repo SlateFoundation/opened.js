@@ -140,6 +140,12 @@
       }
     },
 
+    objToQueryString: function (obj) {
+      return '?' + Object.keys(obj).map(function(key) {
+            return encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]);
+      }).join('&');
+    },
+
     xhr: function (options) {
       var xmlhttp = new XMLHttpRequest(),
           self = this,
@@ -157,14 +163,8 @@
       };
       var type = options.type || 'GET';
       var url = options.url;
-      if (type === 'GET') {
-        var params = [];
-        for (var a in options.data) {
-          params.push(a + '=' + options.data[a]);
-        }
-        if (params.length) {
-          url += '?' + (params.join('&'));
-        }
+      if (type === 'GET' && typeof options.data === 'object') {
+        url += self.objToQueryString(options.data);
       }
       xmlhttp.open(type, url, true);
 
