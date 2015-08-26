@@ -132,18 +132,28 @@
       return localStorage.getItem(this.tokenPrefix + '.access_token');
     },
 
+    parseJSON: function (str) {
+      try {
+        return JSON.parse(str);
+      } catch (e) {
+        return str;
+      }
+    },
+
     xhr: function (options) {
-      var xmlhttp=new XMLHttpRequest();
+      var xmlhttp = new XMLHttpRequest(),
+          self = this,
+          response;
+
       xmlhttp.onreadystatechange=function(){
         if (xmlhttp.readyState==4) {
+          response = self.parseJSON(xmlhttp.responseText);
           if (xmlhttp.status==200) {
-            options.success(JSON.parse(xmlhttp.responseText));
+            options.success(response);
           } else if (xmlhttp.status>=400) {
-            var error = {error: 'Unknown error'};
+            var error = { error: 'HTTP ' + xmlhttp.status + ': ' + (xmlhttp.statusText || 'Unknown error') };
             if (xmlhttp.responseText) {
-              error = JSON.parse(xmlhttp.responseText)
-            } else if (xmlhttp.statusText) {
-              error = JSON.parse(xmlhttp.statusText)
+              error = self.parseJSON(xmlhttp.responseText)
             }
             options.error && options.error(error);
           }
