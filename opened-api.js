@@ -136,7 +136,7 @@
       try {
         return JSON.parse(str);
       } catch (e) {
-        return str;
+        return null;
       }
     },
 
@@ -148,14 +148,10 @@
       xmlhttp.onreadystatechange=function(){
         if (xmlhttp.readyState==4) {
           response = self.parseJSON(xmlhttp.responseText);
-          if (xmlhttp.status==200) {
+          if (xmlhttp.status == 200 && response) {
             options.success(response);
-          } else if (xmlhttp.status>=400) {
-            var error = { error: 'HTTP ' + xmlhttp.status + ': ' + (xmlhttp.statusText || 'Unknown error') };
-            if (xmlhttp.responseText) {
-              error = self.parseJSON(xmlhttp.responseText)
-            }
-            options.error && options.error(error);
+          } else if (xmlhttp.status >= 400 && typeof options.error === 'function') {
+            options.error(response || { error: 'HTTP ' + xmlhttp.status + ': ' + (xmlhttp.statusText || 'Unknown error') });
           }
         }
       };
