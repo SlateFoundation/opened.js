@@ -186,7 +186,7 @@
         if(options.raw_data){
           xmlhttp.send(options.raw_data);
         }else{
-          xmlhttp.send(this.prepareReqData(options.data));
+          xmlhttp.send(JSON.stringify(options.data));
         }
       } else {
         xmlhttp.send();
@@ -224,10 +224,6 @@
       } else {
         callback(new Error('token has expired'));
       }
-    },
-
-    prepareReqData: function (data) {
-      return JSON.stringify(data);
     },
 
     checkTokenDate: function () {
