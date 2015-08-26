@@ -158,7 +158,6 @@
         }
       });
 
-      debugger;
       return (result.length === 0) ? '' : '?' + result.join('&');
     },
 
