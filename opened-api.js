@@ -158,7 +158,6 @@
       var type = options.type || 'GET';
       var url = options.url;
       if (type === 'GET') {
-        var urlData = '?';
         var params = [];
         for (var a in options.data) {
           params.push(a + '=' + options.data[a]);
