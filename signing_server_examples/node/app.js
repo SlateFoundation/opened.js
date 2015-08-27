@@ -3,8 +3,8 @@ var cors = require('cors');
 var crypto = require('crypto');
 var express = require('express');
 
-var APP_SECRET = 'THE.APP.SECRET.SHARED.BETWEEN.YOU.AND.OPENEDIO';
 var CLIENT_ID  = 'YOUR.APP.ID.GRANTED.BY.OPENEDIO';
+var CLIENT_SECRET = 'THE.CLIENT.SECRET.SHARED.BETWEEN.YOU.AND.OPENEDIO';
 
 var app = express();
 
@@ -32,7 +32,7 @@ var generateSignedRequest = function(username, client_id) {
 
   var encoded_envelope = base64UrlEncode(envelope);
 
-  var hmac = crypto.createHmac('sha256', APP_SECRET);
+  var hmac = crypto.createHmac('sha256', CLIENT_SECRET);
   var signature = hmac.update(encoded_envelope).digest().toString('hex');
   var encoded_signature = base64UrlEncode(signature);
 
