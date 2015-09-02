@@ -28,6 +28,8 @@ var generateSignedRequest = function(username, client_id) {
   var envelope = {username: username, client_id: client_id};
   envelope.token = crypto.randomBytes(64).toString('hex'); //It's important that this is unique by user
   envelope.algorithm = 'HMAC-SHA256';
+  // user can have association with the school by supplying NCES_ID
+  // envelope.school_nces_id = '<nces_id>';
   envelope = JSON.stringify(envelope);
 
   var encoded_envelope = base64UrlEncode(envelope);
