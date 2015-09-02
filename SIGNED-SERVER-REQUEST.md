@@ -77,7 +77,7 @@ In the above example, we return the generated signed server request embedded int
 
 ### Using the signed server request to associate user the the school
 
-Optionally, you can associate the authenticated user with the particular school using school's [NCES_ID](http://nces.ed.gov/globallocator/). You can do that by providing school's NCES_ID as a parameter in the signed server requiest's envelop:
+Optionally, you can associate the authenticated user with the particular school using school's [NCES_ID](http://nces.ed.gov/globallocator/). You can do that by providing school's NCES_ID as a parameter in the signed server requiest's envelope:
 
 ```ruby
 
