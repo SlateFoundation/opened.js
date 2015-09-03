@@ -34,6 +34,8 @@ class SignedServerRequest
     {
         $envelope = self::base64UrlEncode(json_encode([
             'username' => $username,
+            # user can have optional association with their school by supplying NCES_ID
+            # 'school_nces_id' => '<nces_id>',
             'client_id' => $this->client_id,
             'token' => self::generateToken($username),
             'algorithm' => 'HMAC-SHA256'

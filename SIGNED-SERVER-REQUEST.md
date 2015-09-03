@@ -56,6 +56,8 @@ post '/generate_signed_request' do
   envelope["client_id"] ||= CLIENT_ID
   envelope["algorithm"] ||= 'HMAC-SHA256'
   envelope["token"] ||= SecureRandom.hex #It's important that this is unique by user
+  # user can have association with the school by supplying NCES_ID
+  # envelope["school_nces_id"] = '<nces_id>'
 
   envelope = JSON.dump(envelope)
   encoded_envelope = base64_url_encode(envelope)
@@ -72,6 +74,34 @@ end
 ```
 
 In the above example, we return the generated signed server request embedded into the [page that is rendered](signing_server_examples/ruby/views/login_and_query.erb). After that, the signed secure request can be used to login your authenticated user to the OpenEd system. 
+
+### Using the signed server request to associate user the the school
+
+Optionally, you can associate the authenticated user with their particular school using school's [NCES_ID](http://nces.ed.gov/globallocator/). You can do that by providing school's NCES_ID as a parameter in the signed server request's envelope:
+
+```ruby
+
+post '/generate_signed_request' do
+  envelope = @params
+  envelope["client_id"] ||= CLIENT_ID
+  envelope["algorithm"] ||= 'HMAC-SHA256'
+  envelope["token"] ||= SecureRandom.hex #It's important that this is unique by user
+  # user can have optional association with their school by supplying NCES_ID
+  envelope["school_nces_id"] = '<user_school_nces_id>'
+
+  envelope = JSON.dump(envelope)
+  encoded_envelope = base64_url_encode(envelope)
+
+  signature = OpenSSL::HMAC.hexdigest(OpenSSL::Digest::SHA256.new, APP_SECRET, encoded_envelope)
+  encoded_signature = base64_url_encode(signature)
+
+  @signed_request = "#{encoded_signature}.#{encoded_envelope}"
+  @client_id = CLIENT_ID
+
+  erb :login_and_query
+end
+
+```
 
 ## Using the signed server request to authenticate users with OpenEd
 

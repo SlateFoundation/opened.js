@@ -34,6 +34,9 @@ post '/generate_signed_request' do
   envelope["client_id"] ||= CLIENT_ID
   envelope["algorithm"] ||= 'HMAC-SHA256'
   envelope["token"] ||= SecureRandom.hex #It's important that this is unique by user
+  # user can have optional association with their school by supplying NCES_ID
+  # envelope["school_nces_id"] = '<nces_id>'
+  
 
   envelope = JSON.dump(envelope)
   encoded_envelope = base64_url_encode(envelope)
