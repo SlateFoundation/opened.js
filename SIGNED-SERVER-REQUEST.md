@@ -75,7 +75,7 @@ end
 
 In the above example, we return the generated signed server request embedded into the [page that is rendered](signing_server_examples/ruby/views/login_and_query.erb). After that, the signed secure request can be used to login your authenticated user to the OpenEd system. 
 
-### Using the signed server request to associate user the the school
+### Using the signed server request to associate user with their school
 
 Optionally, you can associate the authenticated user with their particular school using school's [NCES_ID](http://nces.ed.gov/globallocator/). You can do that by providing school's NCES_ID as a parameter in the signed server request's envelope:
 
