@@ -77,7 +77,7 @@ In the above example, we return the generated signed server request embedded int
 
 ### Using the signed server request to associate user the the school
 
-Optionally, you can associate the authenticated user with the particular school using school's [NCES_ID](http://nces.ed.gov/globallocator/). You can do that by providing school's NCES_ID as a parameter in the signed server requiest's envelope:
+Optionally, you can associate the authenticated user with their particular school using school's [NCES_ID](http://nces.ed.gov/globallocator/). You can do that by providing school's NCES_ID as a parameter in the signed server request's envelope:
 
 ```ruby
 
@@ -86,7 +86,7 @@ post '/generate_signed_request' do
   envelope["client_id"] ||= CLIENT_ID
   envelope["algorithm"] ||= 'HMAC-SHA256'
   envelope["token"] ||= SecureRandom.hex #It's important that this is unique by user
-  # user can have association with the school by supplying NCES_ID
+  # user can have optional association with their school by supplying NCES_ID
   envelope["school_nces_id"] = '<user_school_nces_id>'
 
   envelope = JSON.dump(envelope)
