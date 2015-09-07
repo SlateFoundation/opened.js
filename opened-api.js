@@ -15,35 +15,30 @@
     _events: {},
 
     on: function (eventName, callback) {
-      if (eventName && callback) {
-        if (!this._events[eventName]) {
-          this._events[eventName] = [];
-        }
+      if (eventName && typeof callback === 'function') {
+        this._events[eventName] = this._events[eventName] || [];
         this._events[eventName].push(callback);
       }
     },
 
     off: function (eventName, callback) {
-      if (eventName && callback) {
-        if (this._events[eventName]) {
-          var callbackIndex = this._events[eventName].indexOf(callback);
-          if (callbackIndex >= 0) {
-            this._events[eventName].slice(callbackIndex, 1);
-          }
+      var eventsArr = this._events[eventName];
+
+      if (eventsArr && typeof callback === 'function') {
+        var callbackIndex = eventsArr.indexOf(callback);
+        if (callbackIndex !== -1) {
+          eventsArr.slice(callbackIndex, 1);
         }
       }
     },
 
-    trigger: function () {
-      var args = Array.prototype.slice.call(arguments);
-      var eventName = args.slice(0)[0];
-      var eventsArr = this._events[eventName];
-      var data = args.slice(1);
-      if (eventsArr && eventsArr.length) {
+    trigger: function (eventName) {
+      var data = Array.prototype.slice.call(arguments).slice(1),
+          eventsArr = this._events[eventName] || [];
+
         eventsArr.forEach(function (callback) {
           callback.apply(null, data);
         });
-      }
     },
 
     init: function (options, callback) {
@@ -57,15 +52,15 @@
         var self = this;
         this.checkLoginStatus(function () {
           self.trigger('auth.userLoggedIn');
-          callback && callback();
+          (typeof callback !== 'function') || callback();
         });
       } else {
-        callback && callback();
+        (typeof callback !== 'function') || callback();
       }
     },
 
     runOnInit: function () {
-      root.OpenEd.oninit && root.OpenEd.oninit()
+      (typeof root.OpenEd.oninit !== 'function') || root.OpenEd.oninit()
     },
 
     silentLogin: function(signedRequest, callback, errorCallback) {
@@ -76,24 +71,31 @@
         raw_data: signedRequest,
         success: function(data){
           self.saveToken(data);
-          callback && callback();
+          (typeof callback !== 'function') || callback();
         },
         error: errorCallback
-      }, errorCallback);
+      });
     },
 
     login: function (callback) {
+      if (typeof this.options === 'undefined') {
+        throw new Error("You must call init() before calling login()");
+      }
+
       this._lastCallback = callback;
-      var params = '?mode=implict';
-      var self = this;
-      ['client_id', 'redirect_uri'].forEach(function (paramName) {
-        var paramValue = self.options[paramName];
-        if (paramValue) {
-          params += '&' + paramName + '=' + paramValue
-        }
-      });
-      var popup = window.open(this.openedHost + '/oauth/authorize' + params, '_blank', 'width=500, height=300');
-      popup.focus && popup.focus();
+
+      var params = {
+        mode: 'implicit',
+        client_id: this.options.client_id,
+        redirect_uri: this.options.redirect_uri
+      },
+      popup = window.open(this.openedHost + '/oauth/authorize' + this.objToQueryString(params), '_blank', 'width=500, height=300');
+
+      if (typeof popup === 'undefined') {
+        alert("The OpenEd login popup was blocked by your browser. Please allow popups on this site and try again.");
+      } else {
+        popup.focus();
+      }
     },
 
     logout: function (callback) {
@@ -137,34 +139,47 @@
       return localStorage.getItem(this.tokenPrefix + '.access_token');
     },
 
+    parseJSON: function (str) {
+      try {
+        return JSON.parse(str);
+      } catch (e) {
+        return null;
+      }
+    },
+
+    objToQueryString: function (obj) {
+      var result = [];
+
+      Object.keys(obj).forEach(function(key) {
+        var val = obj[key];
+
+        if (typeof val !== 'undefined' && val !== null) {
+          result.push(encodeURIComponent(key) + '=' + encodeURIComponent(val));
+        }
+      });
+
+      return (result.length === 0) ? '' : '?' + result.join('&');
+    },
+
     xhr: function (options) {
-      var xmlhttp=new XMLHttpRequest();
+      var xmlhttp = new XMLHttpRequest(),
+          self = this,
+          response;
+
       xmlhttp.onreadystatechange=function(){
         if (xmlhttp.readyState==4) {
-          if (xmlhttp.status==200) {
-            options.success(JSON.parse(xmlhttp.responseText));
-          } else if (xmlhttp.status>=400) {
-            var error = {error: 'Unknown error'};
-            if (xmlhttp.responseText) {
-              error = JSON.parse(xmlhttp.responseText)
-            } else if (xmlhttp.statusText) {
-              error = JSON.parse(xmlhttp.statusText)
-            }
-            options.error && options.error(error);
+          response = self.parseJSON(xmlhttp.responseText);
+          if (xmlhttp.status == 200 && response) {
+            options.success(response);
+          } else if (xmlhttp.status >= 400 && typeof options.error === 'function') {
+            options.error(response || { error: 'HTTP ' + xmlhttp.status + ': ' + (xmlhttp.statusText || 'Unknown error') });
           }
         }
-      }
+      };
       var type = options.type || 'GET';
       var url = options.url;
-      if (type === 'GET') {
-        var urlData = '?';
-        var params = [];
-        for (var a in options.data) {
-          params.push(a + '=' + options.data[a]);
-        }
-        if (params.length) {
-          url += '?' + (params.join('&'));
-        }
+      if (type === 'GET' && typeof options.data === 'object') {
+        url += self.objToQueryString(options.data);
       }
       xmlhttp.open(type, url, true);
 
@@ -186,7 +201,7 @@
         if(options.raw_data){
           xmlhttp.send(options.raw_data);
         }else{
-          xmlhttp.send(this.prepareReqData(options.data));
+          xmlhttp.send(JSON.stringify(options.data));
         }
       } else {
         xmlhttp.send();
@@ -226,24 +241,15 @@
       }
     },
 
-    prepareReqData: function (data) {
-      return JSON.stringify(data);
-    },
-
     checkTokenDate: function () {
-      var tokenDate = new Date(parseInt(localStorage.getItem(this.tokenPrefix + '.expires_in')));
-      var now = this.now();
-      return now.getTime() < tokenDate.getTime();
+      var tokenDate = new Date(parseInt(localStorage.getItem(this.tokenPrefix + '.expires_in'), 10));
+      return new Date() < tokenDate;
     },
 
-    expireDate: function (expairsIn) {
-      var date = this.now();
-      date.setTime(date.getTime() + (parseInt(expairsIn) * 1000) );
+    expireDate: function (expiresIn) {
+      var date = new Date();
+      date.setTime(date.getTime() + (parseInt(expiresIn) * 1000, 10));
       return date;
-    },
-
-    now: function () {
-      return new Date();
     },
 
     checkLoginStatus: function (callback) {
@@ -264,16 +270,15 @@
           self.trigger('auth.userLoggedIn', token);
         }
         self._lastCallback && self._lastCallback(err);
-      })
-
+      });
     },
 
     parseToken: function (token) {
       var params = token.substr(1);
       var result = {};
-      params.split('&').forEach(function (paramPairStr) {
+      params.split('&').forEach(function(paramPairStr) {
         var paramPair = paramPairStr.split('=');
-        result[paramPair[0]] = paramPair[1];
+        result[decodeURIComponent(paramPair[0])] = decodeURIComponent(paramPair[1]);
       });
       if (result.expires_in) {
         result.expires_in = this.expireDate(result.expires_in).getTime();
