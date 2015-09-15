@@ -1,6 +1,6 @@
 # OpenEd JavaScript API
 
-This JavaScript library lets you integrate with the OpenEd resource library from your web application. It provides the client with two ways of authenticating the user with the OpenEd system:
+This JavaScript library lets you integrate with the OpenEd resource library from your web or mobile application. It provides the client with two ways of authenticating the user with the OpenEd system.  Your API calls should then always use the authenticated user token to interact with the OpenEd API (such as querying for resources).  
 
   - Server to Server (create a user on OpenEd.com and loggining in via a Signed Server Request)
   - Client-to-Client (allowing user to interact directly with the OpenEd-provided sign-in dialog)
