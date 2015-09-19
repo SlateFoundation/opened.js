@@ -9,6 +9,8 @@ If you choose to create an OpenEd user yourself, you can pass the identity of th
 
 For those interested in the the Client-to-Client approach where OpenEd pops up an authentication/account creation JavaScript dialog, this is described [here](CLIENT-TO-CLIENT.md). This approach can be a bit less work for the integrating developer.  
 
+After creating a teacher user you can create classes and students for them using the API calls below. 
+
 ### Using the REST API after successful login
 
 Once authentication has been completed, your web app can use the OpenEd REST API to query the resources library. For example:
@@ -120,3 +122,6 @@ window.OpenEd.api.request('/resources.json', {
 }
 ```
 
+## Creating Classes and Students 
+
+You can optionally create classes and students for those classes using the following API calls.   
