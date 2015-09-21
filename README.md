@@ -121,7 +121,3 @@ window.OpenEd.api.request('/resources.json', {
   ]
 }
 ```
-
-## Creating Classes and Students 
-
-You can optionally create classes and students for those classes using the following API calls.   
