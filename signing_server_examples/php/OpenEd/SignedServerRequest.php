@@ -7,11 +7,13 @@ class SignedServerRequest
 {
     private $client_id;
     private $client_secret;
+    private $nces_id;
 
-    public function __construct($client_id, $client_secret)
+    public function __construct($client_id, $client_secret, $nces_id = null)
     {
         $this->client_secret = $client_secret;
         $this->client_id = $client_id;
+        $this->nces_id = $nces_id;
     }
 
     private static function base64UrlEncode($input)
@@ -30,19 +32,36 @@ class SignedServerRequest
         }
     }
 
-    public function generateSignedRequest($username)
+    public function generateSignedRequest($username, $params = [], $token = null)
     {
-        $envelope = self::base64UrlEncode(json_encode([
+        $envelope = [
             'username' => $username,
-            # user can have optional association with their school by supplying NCES_ID
-            # 'school_nces_id' => '<nces_id>',
             'client_id' => $this->client_id,
-            'token' => self::generateToken($username),
+            'token' => $token ?: self::generateToken($username),
             'algorithm' => 'HMAC-SHA256'
-        ]));
+        ];
 
+        $envelope = array_merge($params, $envelope);
+
+        if ($this->nces_id != null && !isset($envelope['school_nces_id'])) {
+            $envelope['school_nces_id'] = (string) $this->nces_id;
+        }
+
+        $json_envelope = json_encode($envelope);
+
+        print "Envelope contents: \n" . $json_envelope . "\n";
+
+        $envelope = self::base64UrlEncode($json_envelope);
         $signature = self::base64UrlEncode(hash_hmac('SHA256', $envelope, $this->client_secret));
 
         return "$signature.$envelope";
+    }
+
+    public function setNcesId($nces_id) {
+        $this->nces_id = (string) $nces_id;
+    }
+
+    public function getNcesId() {
+        return $this->nces_id;
     }
 }
