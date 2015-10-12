@@ -70,13 +70,17 @@ class ApiClient
             throw new \InvalidArgumentException('username and password are required parameters if they were not set in ApiClient');
         }
 
-        $response = $this->request('POST', self::TOKEN_PATH, [
+        list($error, $response, $response_code) = $this->request('POST', self::TOKEN_PATH, [
             'username' => $username,
             'password' => $password,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
             'grant_type' => 'password'
         ]);
+
+        if ($error || $response_code != 200) {
+            throw new \ErrorException("[OpenEd] Unable to get access token: $error");
+        }
 
         if ($use_token) {
             $this->access_token = $response['access_token'];
@@ -90,13 +94,18 @@ class ApiClient
         $this->access_token = $access_token;
     }
 
-    public function request($method, $path = '/', $params = [], $headers = [], $fields = [], $base_url = self::BASE_URL, $no_auth = false)
+    public function request($method, $path = '/', $params = [], $headers = [], $fields = [])
     {
-        if ($base_url === self::BASE_URL && strpos($path, '/teachers') === 0) {
-            $base_url = self::PARTNER_BASE_URL;
-        }
+        $error = null;
 
-        $url = $base_url . $path;
+        $url = ((strpos($path, '/teachers') === 0) ? self::PARTNER_BASE_URL : self::BASE_URL) . $path;
+
+        // If the path already contains query parameters, merge them with $params if passed
+        $question_pos = strpos('?', $path);
+        if ($question_pos && count($params) > 0) {
+            $params = array_merge($params, parse_str(substr($path, $question_pos)));
+            $path = substr($path, $question_pos);
+        }
 
         if (count($params) > 0) {
             $url .= '?' . http_build_query($params);
@@ -104,11 +113,13 @@ class ApiClient
 
         $implicit_headers = [];
 
-        if (!$no_auth && $this->access_token) {
+        if ($this->access_token) {
             $implicit_headers[] = 'Authorization: Bearer ' . $this->access_token;
         }
 
-        if (!$no_auth && $method == 'POST') {
+        $has_body = count($fields) > 0;
+
+        if ($has_body) {
             $implicit_headers[] = 'Content-Type: application/json';
         }
 
@@ -116,45 +127,102 @@ class ApiClient
 
         curl_setopt_array($this->curl, [
             CURLOPT_CUSTOMREQUEST => $method,
-            CURLOPT_POST => $method != 'GET',
+            CURLOPT_POST => $method !== 'GET',
             CURLOPT_URL => $url,
             CURLOPT_HTTPHEADER => $headers,
-            CURLOPT_POSTFIELDS => $method == 'POST' ? json_encode($fields) : null
+            CURLOPT_POSTFIELDS => $has_body ? json_encode($fields) : null
         ]);
 
         $response = curl_exec($this->curl);
         $response_code = curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
 
         if ($response_code >= 400) {
-            $this->outputVerboseError($method, $url, $headers, $fields, $response, $response_code);
-            throw new \ErrorException("$method $url failed with HTTP $response_code: $response");
+            $error = 'HTTP $response_code';
+            if ($this->trigger_errors) {
+                if ($this->verbose) {
+                    trigger_error($this->generateVerboseError($method, $url, $headers, $fields, $response, $response_code), E_USER_ERROR);
+                } else {
+                    trigger_error("[OpenEd] $method $url returned $error");
+                }
+            }
         }
 
-        $curl_error = curl_errno($this->curl);
-
-        if ($curl_error) {
-            throw new \ErrorException(curl_error($this->curl));
+        if ($curl_error = curl_errno($this->curl)) {
+            $error = new \ErrorException(curl_error($this->curl));
         }
 
-        return json_decode($response, true);
+        $response_is_json = strpos(curl_getinfo($this->curl, CURLINFO_CONTENT_TYPE), 'json') !== false;
+
+        // returns error, response, response_code
+        return [
+            $error,
+            $response_is_json ? json_decode($response, true) : $response,
+            $response_code
+        ];
     }
 
 
-    public function get($path = '/', $params = [], $headers = [], $fields = [])
+    public function get($path = '/', $params = [], $headers = [], $fields = [], $success_code = 200)
     {
-        return $this->request('GET', $path, $params, $headers, $fields);
+        list($error, $response, $response_code) = $this->request('GET', $path, $params, $headers, $fields);
+
+        if ($error) {
+            trigger_error("[OpenEd] GET $path: $error", E_USER_ERROR);
+        }
+
+        if ($response_code != $success_code) {
+            trigger_error("[OpenEd] GET $path: expected HTTP $success_code got $response_code", E_USER_NOTICE);
+        }
+
+        return $response;
     }
 
 
-    public function put($path = '/', $params = [], $headers = [], $fields = [])
+    public function put($path = '/', $params = [], $headers = [], $fields = [], $success_code = 201)
     {
-        return $this->request('PUT', $path, $params, $headers, $fields);
+        list($error, $response, $response_code) = $this->request('PUT', $path, $params, $headers, $fields);
+
+        if ($error) {
+            trigger_error("[OpenEd] PUT $path: $error", E_USER_ERROR);
+        }
+
+        if ($response_code != $success_code) {
+            trigger_error("[OpenEd] PUT $path: expected HTTP $success_code got $response_code", E_USER_NOTICE);
+        }
+
+        return $response;
     }
 
 
-    public function post($path = '/', $params = [], $headers = [], $fields = [])
+    public function post($path = '/', $params = [], $headers = [], $fields = [], $success_code = 200)
     {
-        return $this->request('POST', $path, $params, $headers, $fields);
+        list($error, $response, $response_code) = $this->request('POST', $path, $params, $headers, $fields);
+
+        if ($error) {
+            trigger_error("[OpenEd] POST $path: $error", E_USER_ERROR);
+        }
+
+        if ($response_code != $success_code) {
+            trigger_error("[OpenEd] POST $path: expected HTTP $success_code got $response_code", E_USER_NOTICE);
+        }
+
+        return $response;
+    }
+
+
+    public function delete($path = '/', $params = [], $headers = [], $fields = [], $success_code = 204)
+    {
+        list($error, $response, $response_code) = $this->request('DELETE', $path, $params, $headers, $fields);
+
+        if ($error) {
+            trigger_error("[OpenEd] DELETE $path: $error", E_USER_ERROR);
+        }
+
+        if ($response_code != $success_code) {
+            trigger_error("[OpenEd] DELETE $path: expected HTTP $success_code got $response_code", E_USER_NOTICE);
+        }
+
+        return $response;
     }
 
 
@@ -183,12 +251,6 @@ class ApiClient
 
 
         return json_decode($response, true);
-    }
-
-
-    public function delete($path = '/', $params = [], $headers = [], $fields = [])
-    {
-        return $this->request('DELETE', $path, $params, $headers, $fields);
     }
 
 
@@ -263,7 +325,7 @@ class ApiClient
             }
         }
 
-        return $this->post('/teachers/classes', [], [], $fields);
+        return $this->post('/teachers/classes', [], [], ['class' => $fields]);
     }
 
     public function updateClass($class_id, $title, $grade_range = null)
