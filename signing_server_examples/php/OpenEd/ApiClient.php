@@ -313,7 +313,7 @@ class ApiClient
     }
 
 
-    public function createClass($title, $grade_range = null)
+    public function createClass($title, $grades_range = null)
     {
         $fields = [];
 
@@ -323,9 +323,9 @@ class ApiClient
             throw new \ErrorException('Title is required.');
         }
 
-        if ($grade_range) {
-            if ($this->validateGradeRange($grade_range)) {
-                $fields['grade_range'] = $grade_range;
+        if ($grades_range) {
+            if ($this->validateGradeRange($grades_range)) {
+                $fields['grades_range'] = $grades_range;
             } else {
                 throw new Error('Invalid grade range, valid formats are: 5, 5-6');
             }
@@ -335,7 +335,7 @@ class ApiClient
     }
 
 
-    public function updateClass($class_id, $title, $grade_range = null)
+    public function updateClass($class_id, $title, $grades_range = null)
     {
         $fields = [];
 
@@ -343,9 +343,9 @@ class ApiClient
             throw new \ErrorException('Expecting a numeric class_id, instead got: ' . $class_id);
         }
 
-        if ($grade_range) {
-            if ($this->validateGradeRange($grade_range)) {
-                $params['grade_range'] = $grade_range;
+        if ($grades_range) {
+            if ($this->validateGradeRange($grades_range)) {
+                $params['grades_range'] = $grades_range;
             } else {
                 throw new Error('Invalid grade range, valid formats are: 5, 5-6');
             }
