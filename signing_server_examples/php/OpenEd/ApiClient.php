@@ -13,6 +13,7 @@ class ApiClient
     private $access_token;
 
     const BASE_URL = 'https://api.opened.io';
+    const PARTNER_BASE_URL = 'https://partner.opened.com';
     const TOKEN_PATH = '/oauth/token';
 
     public function __construct($client_id, $client_secret, $username = null, $password = null, $access_token = null)
@@ -89,6 +90,10 @@ class ApiClient
 
     public function request($method, $path = '/', $params = [], $headers = [], $fields = [], $base_url = self::BASE_URL, $no_auth = false)
     {
+        if ($base_url === self::BASE_URL && strpos($path, '/teachers') === 0) {
+            $base_url = self::PARTNER_BASE_URL;
+        }
+
         $url = $base_url . $path;
 
         if (count($params) > 0) {
@@ -121,6 +126,12 @@ class ApiClient
         if ($response_code >= 400) {
             $this->outputVerboseError($method, $url, $headers, $fields, $response, $response_code);
             throw new \ErrorException("$method $url failed with HTTP $response_code: $response");
+        }
+
+        $curl_error = curl_errno($this->curl);
+
+        if ($curl_error) {
+            throw new \ErrorException(curl_error($this->curl));
         }
 
         return json_decode($response, true);
@@ -250,7 +261,7 @@ class ApiClient
             }
         }
 
-        $this->post('/teachers/classes', [], [], $fields);
+        return $this->post('/teachers/classes', [], [], $fields);
     }
 
     public function updateClass($class_id, $title, $grade_range = null)
@@ -278,7 +289,7 @@ class ApiClient
             return;
         }
 
-        $this->put('/teachers/classes/' . $class_id, [], [], $fields);
+        return $this->put('/teachers/classes/' . $class_id, [], [], $fields);
     }
 
     public function deleteClass($class_id)
@@ -287,7 +298,7 @@ class ApiClient
             throw new \ErrorException('Class id is required.');
         }
 
-        $this->delete('/teachers/classes/' . $class_id);
+        return $this->delete('/teachers/classes/' . $class_id);
     }
 
     public function createStudent($student)
@@ -308,7 +319,7 @@ class ApiClient
                 '; required fields: ' . implode(', ', $required_fields)  . ' optional fields: ' . implode(', ', $optional_fields));
         }
 
-        $this->post('/teachers/students', [], [], $student);
+        return $this->post('/teachers/students', [], [], $student);
     }
 
     public function updateStudent($student_id, $student)
@@ -327,7 +338,7 @@ class ApiClient
                 '; valid fields are: ' . implode(', ', $required_fields)  . implode(', ', $optional_fields));
         }
 
-        $this->put('/teachers/students/' . $student_id, [], [], $student);
+        return $this->put('/teachers/students/' . $student_id, [], [], $student);
     }
 
     public function deleteStudent($student_id)
@@ -336,7 +347,7 @@ class ApiClient
             throw new \ErrorException('Expecting a numeric student_id, instead got: ' . $student_id);
         }
 
-        $this->delete('/teachers/students/' . $student_id);
+        return $this->delete('/teachers/students/' . $student_id);
     }
 
     public function addStudentsToClass($student_ids, $class_id)
@@ -355,7 +366,7 @@ class ApiClient
             throw new \ErrorException('Expecting a numeric class_id, instead got: ' . $class_id);
         }
 
-        $this->post("/teachers/classes/$class_id/add_students", [], [], $fields);
+        return $this->post("/teachers/classes/$class_id/add_students", [], [], $fields);
     }
 
     public function addStudentToClass($student_id, $class_id) {
@@ -378,7 +389,7 @@ class ApiClient
             throw new \ErrorException('Expecting a numeric class_id, instead got: ' . $class_id);
         }
 
-        $this->post("/teachers/classes/$class_id/remove_students", [], [], $fields);
+        return $this->post("/teachers/classes/$class_id/remove_students", [], [], $fields);
     }
 
     public function removeStudentFromClass($student_id, $class_id) {
