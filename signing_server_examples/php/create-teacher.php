@@ -45,3 +45,10 @@ print "Using the new access token, attempting to create a class $class_name with
 $test_class = $client->createClass($class_name, $grade_range);
 
 print_r($test_class);
+
+print "Class created\n";
+print "Retrieving all classes for teacher...\n";
+
+$my_classes = $client->getClasses();
+
+print_r($my_classes);
