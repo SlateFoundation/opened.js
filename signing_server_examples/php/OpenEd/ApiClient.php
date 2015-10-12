@@ -353,7 +353,7 @@ class ApiClient
             return;
         }
 
-        return $this->put('/teachers/classes/' . $class_id, [], [], $fields);
+        return $this->put('/teachers/classes/' . $class_id, [], [], ['class' => $fields]);
     }
 
     public function deleteClass($class_id)
@@ -383,7 +383,7 @@ class ApiClient
                 '; required fields: ' . implode(', ', $required_fields)  . ' optional fields: ' . implode(', ', $optional_fields));
         }
 
-        return $this->post('/teachers/students', [], [], $student);
+        return $this->post('/teachers/students', [], [], ['student' => $student]);
     }
 
     public function updateStudent($student_id, $student)
@@ -402,7 +402,7 @@ class ApiClient
                 '; valid fields are: ' . implode(', ', $required_fields)  . implode(', ', $optional_fields));
         }
 
-        return $this->put('/teachers/students/' . $student_id, [], [], $student);
+        return $this->put('/teachers/students/' . $student_id, [], [], ['student' => $student]);
     }
 
     public function deleteStudent($student_id)
