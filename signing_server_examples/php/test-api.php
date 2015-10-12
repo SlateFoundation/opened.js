@@ -17,13 +17,13 @@ $access_token = $client->getAccessToken();
 
 print "Got an OAuth access token: $access_token\n";
 
-$teacher_username = 'sparkmeritteacher';
+$teacher_username = 'herbertgarrison';
 
 $envelope = [
     'role' => 'teacher',
-    'first_name' => 'Spark',
-    'last_name' => 'Merit Teacher',
-    'password' => 'SparkPoint2015'
+    'first_name' => 'Herbert',
+    'last_name' => 'Garrison',
+    'password' => 'mrtwig123'
 ];
 
 
