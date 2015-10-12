@@ -56,6 +56,8 @@ function createClass($class_name, $grade_range) {
 
     $my_classes = $client->getClasses();
 
+    print json_encode($my_classes, JSON_PRETTY_PRINT);
+
     $my_class_objects = $my_classes['classes'];
 
     $found_class = false;
@@ -63,12 +65,12 @@ function createClass($class_name, $grade_range) {
     foreach($my_class_objects as $class) {
         if ($class['id'] == $test_class_id) {
             $found_class = true;
-            last;
+            break;
         }
     }
 
     if ($found_class) {
-        print 'PASS: Class was found in list of classes\n';
+        print "PASS: Class was found in list of classes\n";
     } else {
         die('FAIL: Class was not found in list of classes');
     }
@@ -125,7 +127,7 @@ $student_class_ids = $student['student']['class_ids'];
 if (in_array($new_class_id, $student_class_ids)) {
     die("FAIL: After deleting $new_class_id it still is associated with the student $directly_added_student_id");
 } else {
-    print "PASS: Deleting $new_class_id removed it from student $directly_added_student_ids's' class_ids\n";
+    print "PASS: Deleting $new_class_id removed it from student $directly_added_student_id's class_ids\n";
 }
 
 $my_classes = $client->getClasses();
@@ -135,7 +137,7 @@ $found_class = false;
 foreach($my_class_objects as $class) {
     if ($class['id'] == $new_class_id) {
         $found_class = true;
-        last;
+        break;
     }
 }
 
@@ -148,4 +150,3 @@ if ($found_class) {
 print "Attempting to cleanup remaining entities...\n";
 $client->deleteStudent($directly_added_student_id);
 $client->deleteClass($test_class_id);
-

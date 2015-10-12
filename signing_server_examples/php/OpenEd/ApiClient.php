@@ -298,12 +298,12 @@ class ApiClient
             $params['ids'] = $ids;
         }
 
-        return $this->request('GET', '/teachers/classes', $params);
+        return $this->get('/teachers/classes', $params);
     }
 
 
     public function getClass($id) {
-        return $this->request('GET', '/teachers/classes/' . $id);
+        return $this->get('/teachers/classes/' . $id);
     }
 
 
@@ -331,7 +331,7 @@ class ApiClient
             }
         }
 
-        return $this->post('/teachers/classes', [], [], ['class' => $fields]);
+        return $this->post('/teachers/classes', [], [], ['class' => $fields], '201');
     }
 
 
@@ -379,7 +379,7 @@ class ApiClient
         $required_fields = ['first_name', 'last_name', 'username', 'password'];
         $optional_fields = ['class_ids'];
         $student_keys = array_keys($student);
-        $missing_fields = array_diff($student_keys, $required_fields);
+        $missing_fields = array_diff($required_fields, $student_keys);
         $invalid_fields = array_diff($student_keys, $required_fields, $optional_fields);
 
         if (count($invalid_fields) > 0) {
@@ -392,7 +392,7 @@ class ApiClient
                 '; required fields: ' . implode(', ', $required_fields)  . ' optional fields: ' . implode(', ', $optional_fields));
         }
 
-        return $this->post('/teachers/students', [], [], ['student' => $student]);
+        return $this->post('/teachers/students', [], [], ['student' => $student], '201');
     }
 
 
