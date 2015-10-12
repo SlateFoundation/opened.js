@@ -11,6 +11,8 @@ class ApiClient
     private $password;
     private $curl;
     private $access_token;
+    private $trigger_errors = true;
+    private $verbose = true;
 
     const BASE_URL = 'https://api.opened.io';
     const PARTNER_BASE_URL = 'https://partner.opened.com';
@@ -32,7 +34,7 @@ class ApiClient
         ]);
     }
 
-    private function outputVerboseError($method, $url, $headers, $fields, $response, $response_code)
+    private function generateVerboseError($method, $url, $headers, $fields, $response, $response_code)
     {
         $curl_args = [];
 
@@ -56,7 +58,7 @@ class ApiClient
                     . "RESPONSE:\n" . $response . "\n"
                     . "CURL:\n$curl\n";
 
-        print $error;
+        return $error;
     }
 
     public function getAccessToken($username = null, $password = null, $use_token = true)
