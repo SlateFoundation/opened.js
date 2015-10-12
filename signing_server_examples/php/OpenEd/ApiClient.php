@@ -277,15 +277,18 @@ class ApiClient
         return $this->get('/resources.json', $params);
     }
 
+
     public function getResource($id)
     {
         return $this->get("/resources/$id.json");
     }
 
+
     public function getGradeGroups($standards_group = null)
     {
         return $this->get('/grade_groups.json', $standards_group ? ['standards_group' => $standards_group] : []);
     }
+
 
     public function getClasses($ids = [])
     {
@@ -298,14 +301,17 @@ class ApiClient
         return $this->request('GET', '/teachers/classes', $params);
     }
 
+
     public function getClass($id) {
         return $this->request('GET', '/teachers/classes/' . $id);
     }
+
 
     private static function validateGradeRange($str)
     {
         return preg_match("/^\\d\\-?\\d?$/um", $str);
     }
+
 
     public function createClass($title, $grade_range = null)
     {
@@ -327,6 +333,7 @@ class ApiClient
 
         return $this->post('/teachers/classes', [], [], ['class' => $fields]);
     }
+
 
     public function updateClass($class_id, $title, $grade_range = null)
     {
@@ -356,6 +363,7 @@ class ApiClient
         return $this->put('/teachers/classes/' . $class_id, [], [], ['class' => $fields]);
     }
 
+
     public function deleteClass($class_id)
     {
         if (!$class_id) {
@@ -364,6 +372,7 @@ class ApiClient
 
         return $this->delete('/teachers/classes/' . $class_id);
     }
+
 
     public function createStudent($student)
     {
@@ -386,6 +395,7 @@ class ApiClient
         return $this->post('/teachers/students', [], [], ['student' => $student]);
     }
 
+
     public function updateStudent($student_id, $student)
     {
         if (!is_numeric($student_id)) {
@@ -405,6 +415,17 @@ class ApiClient
         return $this->put('/teachers/students/' . $student_id, [], [], ['student' => $student]);
     }
 
+
+    public function getStudent($student_id)
+    {
+        if (!is_numeric($student_id)) {
+            throw new \ErrorException('Expecting a numeric student_id, instead got: ' . $student_id);
+        }
+
+        return $this->get('/teachers/students/' . $student_id);
+    }
+
+
     public function deleteStudent($student_id)
     {
         if (!is_numeric($student_id)) {
@@ -413,6 +434,7 @@ class ApiClient
 
         return $this->delete('/teachers/students/' . $student_id);
     }
+
 
     public function addStudentsToClass($student_ids, $class_id)
     {
@@ -433,9 +455,11 @@ class ApiClient
         return $this->post("/teachers/classes/$class_id/add_students", [], [], $fields);
     }
 
+
     public function addStudentToClass($student_id, $class_id) {
         return $this->addStudentsToClass([$student_id], $class_id);
     }
+
 
     public function removeStudentsFromClass($student_ids, $class_id)
     {
