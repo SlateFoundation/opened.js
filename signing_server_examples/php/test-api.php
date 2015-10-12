@@ -113,5 +113,39 @@ $missing_classes = array_intersect([$new_class_id, $test_class_id], $student_cla
 if (count($missing_classes)) {
     print "PASS: student was in expected classes: " . implode(', ', $student_class_ids) . "\n";
 } else {
-    print "FAIL: student was not in: " . implode(', ', $missing_classes) . "\n";
+    die("FAIL: student was not in: " . implode(', ', $missing_classes));
 }
+
+print "Deleting class $new_class_id and verifying it no longer exists for the teacher and student\n";
+$client->deleteClass($new_class_id);
+
+$student = $client->getStudent($directly_added_student_id);
+$student_class_ids = $student['student']['class_ids'];
+
+if (in_array($new_class_id, $student_class_ids)) {
+    die("FAIL: After deleting $new_class_id it still is associated with the student $directly_added_student_id");
+} else {
+    print "PASS: Deleting $new_class_id removed it from student $directly_added_student_ids's' class_ids\n";
+}
+
+$my_classes = $client->getClasses();
+$my_class_objects = $my_classes['classes'];
+$found_class = false;
+
+foreach($my_class_objects as $class) {
+    if ($class['id'] == $new_class_id) {
+        $found_class = true;
+        last;
+    }
+}
+
+if ($found_class) {
+    die("FAIL: After deleting $new_class_id it still is associated with the teacher");
+} else {
+    print "PASS: Deleting $new_class_id removed it from the teacher's classes\n";
+}
+
+print "Attempting to cleanup remaining entities...\n";
+$client->deleteStudent($directly_added_student_id);
+$client->deleteClass($test_class_id);
+
