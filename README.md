@@ -2,7 +2,7 @@
 
 This JavaScript library lets you integrate with the OpenEd resource library from your web or mobile application. It provides the client with two ways of authenticating the user with the OpenEd system.  Your API calls should then always use the authenticated user token to interact with the OpenEd API (such as querying for resources).  
 
-  - [Server to Server](SIGNED-SERVER-REQUEST.md) (create a user on OpenEd.com and loggining in via a Signed Server Request)
+  - [Server to Server](SIGNED-SERVER-REQUEST.md) (create a user on OpenEd.com and login in via a Signed Server Request)
   - [Client-to-Client](CLIENT-TO-CLIENT.md) (allowing user to interact directly with the OpenEd-provided sign-in dialog)
 
 If you choose to create an OpenEd user yourself, you can pass the identity of the user authenticated by your web app directly into OpenEd. This method is described [here](SIGNED-SERVER-REQUEST.md).  This provides a seamless experience for the user.   
