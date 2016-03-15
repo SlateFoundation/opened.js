@@ -14,8 +14,7 @@ class ApiClient
     private $trigger_errors = true;
     private $verbose = true;
 
-    const BASE_URL = 'https://api.opened.io';
-    const PARTNER_BASE_URL = 'https://partner.opened.com';
+    const BASE_URL = 'https://partner.opened.com';
     const TOKEN_PATH = '/oauth/token';
 
     public function __construct($client_id, $client_secret, $username = null, $password = null, $access_token = null)
@@ -98,7 +97,7 @@ class ApiClient
     {
         $error = null;
 
-        $url = ((strpos($path, '/teachers') === 0) ? self::PARTNER_BASE_URL : self::BASE_URL) . $path;
+        $url = self::BASE_URL . $path;
 
         // If the path already contains query parameters, merge them with $params if passed
         $question_pos = strpos('?', $path);
