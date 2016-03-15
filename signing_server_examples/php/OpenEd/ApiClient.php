@@ -14,7 +14,7 @@ class ApiClient
     private $trigger_errors = true;
     private $verbose = true;
 
-    const BASE_URL = 'https://partner.opened.com';
+    const BASE_URL = 'http://api-staging.opened.com';
     const TOKEN_PATH = '/oauth/token';
 
     public function __construct($client_id, $client_secret, $username = null, $password = null, $access_token = null)
@@ -45,17 +45,29 @@ class ApiClient
             $curl_args[] = '-H "' . $header . '"';
         }
 
-        if (count($fields) > 0) {
-            $curl_args[] = "-d '" . json_encode($fields, JSON_UNESCAPED_SLASHES) . "'";
+        if (is_array($fields)) {
+            $fields = json_encode($fields, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        }
+
+        if (strlen($fields) > 0) {
+            $curl_args[] = "-d '" . $fields . "'";
         }
 
         $curl = 'curl ' . implode(' ', $curl_args) . ' ' . $url;
 
         $error  = "[HTTP $response_code] $method $url\n"
-                    . "HEADERS:\n" . json_encode($headers, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n"
-                    . "BODY\n" . json_encode($fields, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n"
-                    . "RESPONSE:\n" . $response . "\n"
-                    . "CURL:\n$curl\n";
+                . "HEADERS:\n" . json_encode($headers, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n"
+                . "BODY:\n$fields\n"
+                . "RESPONSE:\n" . $response . "\n"
+                . "CURL:\n$curl\n";
+
+        // The error will be truncated before the curl output is visible, sorry but not sorry
+        $error_length = strlen($error);
+
+        if ($error_length > ini_get('log_errors_max_len')) {
+            ini_set('log_errors_max_len', $error_length);
+            trigger_error("[OpenEd] log_errors_max_len increased to $error_length to output a large error; get ready!");
+        }
 
         return $error;
     }
@@ -227,27 +239,29 @@ class ApiClient
 
     public function postRaw($body = '')
     {
+
         $url = self::BASE_URL . '/oauth/silent_login';
+
+        $headers = ['Content-Type: text/plain', 'Content-Length: ' . strlen($body)];
 
         curl_setopt_array($this->curl, [
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POST => true,
             CURLOPT_URL => $url,
             CURLOPT_POSTFIELDS => $body,
-            CURLOPT_HTTPHEADER => ['Content-Type: text/plain', 'Content-Length: ' . strlen($body)]
+            CURLOPT_HTTPHEADER => $headers
         ]);
 
         $response = curl_exec($this->curl);
         $response_code = curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
 
-
-        print "BODY:\n\n\n$body\n\n\n";
-
-        if ($response_code >= 400) {
-            throw new \ErrorException("POST $url failed with HTTP $response_code: $response");
+        if ($curl_error = curl_errno($this->curl)) {
+            trigger_error('[OpenEd] ' . curl_error($this->curl), E_USER_ERROR);
         }
 
-
+        if ($response_code >= 400) {
+            trigger_error($this->generateVerboseError('POST', $url, $headers, $body, $response, $response_code), E_USER_ERROR);
+        }
 
         return json_decode($response, true);
     }

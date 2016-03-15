@@ -1,18 +1,18 @@
 <?php
 
 
-require_once('./OpenEd/ApiClient.php');
-require_once('./OpenEd/SignedServerRequest.php');
+require_once('../OpenEd/ApiClient.php');
+require_once('../OpenEd/SignedServerRequest.php');
 
 
-$config = json_decode(file_get_contents('./config.json'), true);
+$config = json_decode(file_get_contents('../config.json'), true);
 
 if (!(isset($config['client_id']) && isset($config['client_secret']))) {
     die("You must set your client_id and client_secret in config.json!\n");
 }
 
 $client = new OpenEd\ApiClient($config['client_id'], $config['client_secret'], $config['username'], $config['password']);
-$signed_server_request = new OpenEd\SignedServerRequest($config['client_id'], $config['client_secret'], '260027801484');
+$signed_server_request = new OpenEd\SignedServerRequest($config['client_id'], $config['client_secret']);
 $access_token = $client->getAccessToken();
 
 print "Got an OAuth access token: $access_token\n";
@@ -26,11 +26,11 @@ $envelope = [
     'password' => 'mrtwig123'
 ];
 
-
 $signed_server_request = $signed_server_request->generateSignedRequest($teacher_username, $envelope);
 
-print "Generating a signed server request for username: $teacher_username with the following envelope:\n" . json_encode($envelope, JSON_PRETTY_PRINT) . "\n";
-print "Signed server request: " . $signed_server_request;
+print "Generating a signed server request for username: $teacher_username with the following envelope:\n"
+      . json_encode($envelope, JSON_PRETTY_PRINT) . "\n";
+print "Signed server request: $signed_server_request\n";
 
 $new_teacher_access_token = $client->postRaw($signed_server_request)['access_token'];
 
@@ -56,7 +56,7 @@ function createClass($class_name, $grade_range) {
 
     $my_classes = $client->getClasses();
 
-    print json_encode($my_classes, JSON_PRETTY_PRINT);
+    print json_encode($my_classes, JSON_PRETTY_PRINT) . "\n";
 
     $my_class_objects = $my_classes['classes'];
 
@@ -72,7 +72,7 @@ function createClass($class_name, $grade_range) {
     if ($found_class) {
         print "PASS: Class was found in list of classes\n";
     } else {
-        die('FAIL: Class was not found in list of classes');
+        die("FAIL: Class was not found in list of classes\n");
     }
 
     return $test_class;
@@ -115,7 +115,7 @@ $missing_classes = array_intersect([$new_class_id, $test_class_id], $student_cla
 if (count($missing_classes)) {
     print "PASS: student was in expected classes: " . implode(', ', $student_class_ids) . "\n";
 } else {
-    die("FAIL: student was not in: " . implode(', ', $missing_classes));
+    die("FAIL: student was not in: " . implode(', ', $missing_classes) . "\n");
 }
 
 print "Deleting class $new_class_id and verifying it no longer exists for the teacher and student\n";
@@ -125,7 +125,7 @@ $student = $client->getStudent($directly_added_student_id);
 $student_class_ids = $student['student']['class_ids'];
 
 if (in_array($new_class_id, $student_class_ids)) {
-    die("FAIL: After deleting $new_class_id it still is associated with the student $directly_added_student_id");
+    die("FAIL: After deleting $new_class_id it still is associated with the student $directly_added_student_id\n");
 } else {
     print "PASS: Deleting $new_class_id removed it from student $directly_added_student_id's class_ids\n";
 }
@@ -142,7 +142,7 @@ foreach($my_class_objects as $class) {
 }
 
 if ($found_class) {
-    die("FAIL: After deleting $new_class_id it still is associated with the teacher");
+    die("FAIL: After deleting $new_class_id it still is associated with the teacher\n");
 } else {
     print "PASS: Deleting $new_class_id removed it from the teacher's classes\n";
 }
